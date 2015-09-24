@@ -3,7 +3,6 @@ package com.livejoints.analytics;
 import android.util.Log;
 
 import com.livejoints.data.ParseSensorSummary;
-import com.parse.ParseException;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,11 +29,8 @@ public class ParseDataCollector  {
             ss.analyze();
             Log.d(TAG, "analyzed the latest ParseSensorSummary> :" + ss.toString());
 
-            try {
-                ss.save();//.saveEventually();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+
+            ss.saveEventually();
             Log.d(TAG,"Saved object with average of "+ss.getAverage());
         }
 
