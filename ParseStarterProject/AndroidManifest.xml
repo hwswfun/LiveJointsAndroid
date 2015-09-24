@@ -26,15 +26,6 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
-        <activity
-            android:name=".MainActivity"
-            android:label="@string/title_activity_main" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
         <service
             android:name=".bluetooth.BluetoothLeService"
@@ -47,7 +38,7 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-        <activity android:name=".bluetooth.DeviceControlActivity" />
+        <activity android:name=".bluetooth.OverViewActivity" />
         <activity
             android:name=".activities.RealtimeDisplay"
             android:label="@string/title_activity_realtime_display" >

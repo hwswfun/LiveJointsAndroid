@@ -34,7 +34,6 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import com.livejoints.MainActivity;
 import com.livejoints.R;
 
 import java.util.ArrayList;
@@ -47,10 +46,10 @@ import java.util.List;
  * communicates with {@code BluetoothLeService}, which in turn interacts with the
  * Bluetooth LE API.
  */
-public class DeviceControlActivity extends Activity
+public class OverViewActivity extends Activity
 
 {
-    private final static String TAG = DeviceControlActivity.class.getSimpleName();
+    private final static String TAG = OverViewActivity.class.getSimpleName();
 
     public static final String EXTRAS_DEVICE_NAME = "DEVICE_NAME";
     public static final String EXTRAS_DEVICE_ADDRESS = "DEVICE_ADDRESS";
@@ -184,7 +183,7 @@ public class DeviceControlActivity extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gatt_services_characteristics);
+        setContentView(R.layout.overview);
 
         final Intent intent = getIntent();
         mDeviceName = intent.getStringExtra(EXTRAS_DEVICE_NAME);
@@ -227,6 +226,12 @@ public class DeviceControlActivity extends Activity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.gatt_services, menu);
+
+        // lets not display options for disconnecting. assume autoconnect.
+        menu.findItem(R.id.menu_connect).setVisible(false);
+        menu.findItem(R.id.menu_disconnect).setVisible(false);
+
+/*
         if (mConnected) {
             menu.findItem(R.id.menu_connect).setVisible(false);
             menu.findItem(R.id.menu_disconnect).setVisible(true);
@@ -234,6 +239,7 @@ public class DeviceControlActivity extends Activity
             menu.findItem(R.id.menu_connect).setVisible(true);
             menu.findItem(R.id.menu_disconnect).setVisible(false);
         }
+        */
         return true;
     }
 
@@ -248,12 +254,6 @@ public class DeviceControlActivity extends Activity
                 return true;
             case android.R.id.home:
                 onBackPressed();
-                return true;
-            case R.id.menu_main:
-
-
-                final Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
