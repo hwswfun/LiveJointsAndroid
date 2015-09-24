@@ -51,7 +51,3 @@ public class RFduinoGattAttributes {
         return name == null ? defaultName : name;
     }
 }
-
-
-
-

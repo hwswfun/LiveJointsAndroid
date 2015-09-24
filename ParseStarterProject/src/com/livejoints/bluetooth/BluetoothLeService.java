@@ -295,7 +295,7 @@ public class BluetoothLeService extends Service {
             test = desc.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);  // return value = true
             test = mBluetoothGatt.writeDescriptor(desc);  // return value = true
         } catch (Exception e) {
-
+            Log.e(TAG,e.toString());
         }
 
     }

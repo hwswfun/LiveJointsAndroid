@@ -40,7 +40,6 @@ import com.parse.starter.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * For a given BLE device, this Activity provides the user interface to connect, display data,
@@ -61,13 +60,17 @@ public class DeviceControlActivity extends Activity
     private String mDeviceName;
     private String mDeviceAddress;
     private BluetoothLeService mBluetoothLeService;
-    private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics =
-            new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
     private boolean mConnected = false;
     private BluetoothGattCharacteristic mNotifyCharacteristic;
 
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
+
+
+    private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics =
+            new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
+    ArrayList<HashMap<String, String>> gattServiceData = null;
+    ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData=null;
 
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -103,11 +106,6 @@ public class DeviceControlActivity extends Activity
                 mConnected = true;
                 updateConnectionState(R.string.connected);
                 invalidateOptionsMenu();
-
-
-
-
-
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
                 updateConnectionState(R.string.disconnected);
@@ -116,22 +114,45 @@ public class DeviceControlActivity extends Activity
                 // Show all the supported services and characteristics on the user interface.
                 Log.d(TAG, "===> before getting gatt services");
                 displayGattServices(mBluetoothLeService.getSupportedGattServices());
-
                 Log.d(TAG, "===> after getting gatt services");
+
+
+
+                listenForSensor();
+                //listenForSensor();
+/*
                 UUID UUID_ANGLE_MEASUREMENT = UUID.fromString(RFduinoGattAttributes.ANGLE_MEASUREMENT_CHARACTERISTIC);
                 int btProperties =    BluetoothGattCharacteristic.PROPERTY_READ | BluetoothGattCharacteristic.PROPERTY_NOTIFY;
                 int btPermissions = 0; //BluetoothGattCharacteristic.PERMISSION_READ;
 
-
                 BluetoothGattCharacteristic btCharacteristic = new BluetoothGattCharacteristic(UUID_ANGLE_MEASUREMENT, btProperties, btPermissions);
-
                 mBluetoothLeService.setCharacteristicNotification(btCharacteristic, true);
+*/
+
+
+
+
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
             }
         }
     };
 
+
+    private void listenForSensor() {
+        if (mGattCharacteristics != null) {
+            final BluetoothGattCharacteristic characteristic = mGattCharacteristics.get(2).get(0);
+            final int charaProp = characteristic.getProperties();
+            if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
+
+                //mBluetoothLeService.readCharacteristic(characteristic);
+            }
+            if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
+                mBluetoothLeService.setCharacteristicNotification(
+                        characteristic, true);
+            }
+        }
+    }
 
 
 
@@ -265,6 +286,9 @@ public class DeviceControlActivity extends Activity
         }
     }
 
+
+
+
     // Demonstrates how to iterate through the supported GATT Services/Characteristics.
     // In this sample, we populate the data structure that is bound to the ExpandableListView
     // on the UI.
@@ -273,9 +297,8 @@ public class DeviceControlActivity extends Activity
         String uuid = null;
         String unknownServiceString = getResources().getString(R.string.unknown_service);
         String unknownCharaString = getResources().getString(R.string.unknown_characteristic);
-        ArrayList<HashMap<String, String>> gattServiceData = new ArrayList<HashMap<String, String>>();
-        ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData
-                = new ArrayList<ArrayList<HashMap<String, String>>>();
+        gattServiceData = new ArrayList<HashMap<String, String>>();
+        gattCharacteristicData = new ArrayList<ArrayList<HashMap<String, String>>>();
         mGattCharacteristics = new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
 
         // Loops through available GATT Services.
