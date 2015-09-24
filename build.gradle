@@ -7,10 +7,6 @@ buildscript {
         classpath 'com.android.tools.build:gradle:1.2.3'
         classpath 'com.jakewharton.sdkmanager:gradle-plugin:0.12.+'
     }
-    def keyAlias = System.env['KEY_ALIAS']
-    println keyAlias
-    println 'stupid thing2'
-
 }
 
 allprojects {
