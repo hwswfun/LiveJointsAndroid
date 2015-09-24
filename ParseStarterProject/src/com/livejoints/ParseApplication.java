@@ -27,6 +27,8 @@ public class ParseApplication extends Application {
     ParseObject.registerSubclass(ParseSensorSummary.class);
     // Add your initialization code here
     //Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG);
+
+
     Parse.initialize(this, BuildConfig.PARSE_APPLICATION_ID, BuildConfig.PARSE_CLIENT_KEY);
 
 
@@ -34,7 +36,7 @@ public class ParseApplication extends Application {
     ParseUser.enableAutomaticUser();
     ParseACL defaultACL = new ParseACL();
     // Optionally enable public read access.
-    // defaultACL.setPublicReadAccess(true);
+    defaultACL.setPublicReadAccess(true);
     ParseACL.setDefaultACL(defaultACL, true);
 
     Log.d("APP", "ParseApplication onCreated end");

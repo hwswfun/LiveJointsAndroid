@@ -1,5 +1,7 @@
 package com.livejoints.data;
 
+import android.util.Log;
+
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
@@ -18,7 +20,7 @@ public class ParseSensorSummary extends ParseObject {
 
     public static final String TAG = ParseSensorSummary.class.getSimpleName().toString();
 
-    JSONArray detailSensorArray;
+    JSONArray detailSensorArray = new JSONArray();;
 
 
     private static final String SENSORSUMMARY_AVERAGE = "Average";
@@ -30,9 +32,22 @@ public class ParseSensorSummary extends ParseObject {
 
 
     public ParseSensorSummary() {
-        if (detailSensorArray == null) {
-            detailSensorArray = new JSONArray();
-        }
+        super();
+        Log.d(TAG, "Parse class of ParseSensorSummary is " + this.getClassName());
+
+
+
+        //this.setACL(defaultACL);
+       // if (detailSensorArray == null) {
+       //     detailSensorArray = new JSONArray();
+       // }
+        //setReadingDate(Calendar.getInstance().getTime());
+    }
+
+    public void init() {
+         if (detailSensorArray == null) {
+             detailSensorArray = new JSONArray();
+         }
         setReadingDate(Calendar.getInstance().getTime());
     }
 
@@ -43,7 +58,10 @@ public class ParseSensorSummary extends ParseObject {
 
     public Calendar getCalendar() {
         Calendar cal = Calendar.getInstance();
-        cal.setTime(this.getDate(SENSORSUMMARY_DATE));
+        Date d = this.getDate(SENSORSUMMARY_DATE);
+        if (d!=null) {
+            cal.setTime(d);
+        }
         return cal;
     }
 
@@ -55,12 +73,11 @@ public class ParseSensorSummary extends ParseObject {
         int low = 9999999;
         int high = 0;
 
-        int raw = 0;
-
         long sum = 0;
         int average = 0;
 
         try {
+            if (detailSensorArray.length() < 1) detailSensorArray=this.getJSONArray(SENSORSUMMARY_READINGS);
 
             int count = detailSensorArray.length();
             if (count > 0) {
@@ -83,7 +100,7 @@ public class ParseSensorSummary extends ParseObject {
                 int diff = 0;
                 for (int i = 0; i < count; i++) {
                     int pos = detailSensorArray.getInt(i);
-                    diff = average - raw;
+                    diff = average - pos;
                     sqrd += diff * diff;
                 }
 
@@ -105,7 +122,7 @@ public class ParseSensorSummary extends ParseObject {
         }
 
         this.put(SENSORSUMMARY_READINGS, detailSensorArray);
-        //JSONArray detailSensorArray;
+
 
         return true;
     }

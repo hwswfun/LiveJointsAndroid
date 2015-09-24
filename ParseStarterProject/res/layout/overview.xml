@@ -69,8 +69,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools" android:id="@+id/fragment"
+        xmlns:tools="http://schemas.android.com/tools" android:id="@+id/fragment_realtime"
         android:name="com.livejoints.fragments.RealtimeDisplayFragment"
         tools:layout="@layout/fragment_realtime_display" android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="250dp" />
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" android:id="@+id/fragment_timelapse"
+        android:name="com.livejoints.TimelapseActivityFragment"
+        tools:layout="@layout/fragment_timelapse" android:layout_width="match_parent"
+        android:layout_height="400dp" />
 </LinearLayout>

@@ -35,6 +35,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.livejoints.R;
+import com.livejoints.TimelapseActivityFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,6 +65,8 @@ public class OverViewActivity extends Activity
 
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
+
+    TimelapseActivityFragment timelapseFragment=null;
 
 
     private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics =
@@ -122,6 +125,7 @@ public class OverViewActivity extends Activity
                 //Go get new sensor summary.
 
                 Log.d(TAG, "===> new sensorSummary is available");
+                timelapseFragment.refreshData();
                 //add to stuff
 
             }
@@ -198,6 +202,9 @@ public class OverViewActivity extends Activity
         getActionBar().setDisplayHomeAsUpEnabled(true);
         Intent gattServiceIntent = new Intent(this, BluetoothLeService.class);
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+
+        timelapseFragment = (TimelapseActivityFragment)getFragmentManager().findFragmentById(R.id.fragment_timelapse);
+        timelapseFragment.refreshData();
     }
 
     @Override

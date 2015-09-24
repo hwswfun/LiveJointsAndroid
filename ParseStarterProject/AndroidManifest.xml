@@ -26,7 +26,6 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
-
         <service
             android:name=".bluetooth.BluetoothLeService"
             android:enabled="true" />
@@ -42,6 +41,13 @@
         <activity
             android:name=".activities.RealtimeDisplay"
             android:label="@string/title_activity_realtime_display" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".TimelapseActivity"
+            android:label="@string/title_activity_timelapse" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>

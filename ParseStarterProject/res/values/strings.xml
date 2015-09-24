@@ -5,6 +5,7 @@
     <string name="title_activity_main">MainActivity</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="action_refresh">Refresh</string>
     <string name="action_settings">Settings</string>
 
 
@@ -29,4 +30,5 @@
     <string name="menu_stop">Stop</string>
     <string name="menu_main">Main</string>
     <string name="title_activity_realtime_display">RealtimeDisplay</string>
+    <string name="title_activity_timelapse">TimelapseActivity</string>
 </resources>

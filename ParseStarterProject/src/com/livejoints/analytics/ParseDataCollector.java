@@ -41,6 +41,7 @@ public class ParseDataCollector {
         }
 
         ParseSensorSummary newSS = new ParseSensorSummary();
+        newSS.init();
 
         sensorSummary.add(newSS);
         currentSummaryIndex = sensorSummary.size() - 1;
