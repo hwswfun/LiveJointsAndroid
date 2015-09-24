@@ -45,7 +45,7 @@ import com.livejoints.analytics.ParseDataCollector;
 import com.livejoints.bluetooth.BluetoothLeService;
 import com.parse.ParseAnalytics;
 import com.parse.ParseObject;
-import com.parse.starter.R;
+
 
 import java.util.ArrayList;
 import java.util.Calendar;

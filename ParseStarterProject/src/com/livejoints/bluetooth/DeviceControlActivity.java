@@ -35,7 +35,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.livejoints.MainActivity;
-import com.parse.starter.R;
+import com.livejoints.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;

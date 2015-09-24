@@ -9,7 +9,7 @@ import com.parse.ParseACL;
 import com.parse.ParseCrashReporting;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
-import com.parse.starter.BuildConfig;
+
 
 public class ParseApplication extends Application {
 
