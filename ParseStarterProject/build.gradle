@@ -1,0 +1,78 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.parse'
+
+buildscript {
+  repositories {
+    mavenCentral()
+    maven { url 'https://maven.parse.com/repo' }
+  }
+  dependencies {
+    classpath 'com.parse.tools:gradle:1.+'
+  }
+}
+
+dependencies {
+    compile 'com.parse.bolts:bolts-android:1.2.0'
+    compile 'com.google.code.gson:gson:2.3'
+    compile fileTree(dir: 'libs', include: 'Parse-*.jar')
+    compile fileTree(dir: 'libs', include: 'ParseCrashReporting-*.jar')
+}
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            res.srcDirs = ['res']
+        }
+    }
+    //  http://www.rainbowbreeze.it/environmental-variables-api-key-and-secret-buildconfig-and-android-studio/
+  /*  def PARSE_CONSUMER_KEY = '"' + TwitterConsumerKeyProp + '"' ?: '"Define Twitter Consumer key"';
+    def PARSE_CONSUMER_SECRET = '"' + TwitterConsumerSecretProp + '"' ?: '"Define Twitter Consumer secret"';
+*/
+
+
+/*    android.buildTypes.each { type -&gt;
+        type.buildConfigField 'String', 'TWITTER_CONSUMER_KEY', PARSE_CONSUMER_KEY
+        type.buildConfigField 'String', 'TWITTER_CONSUMER_SECRET', PARSE_CONSUMER_SECRET
+    }*/
+
+    buildTypes {
+        debug {
+            buildConfigField "String", "PARSE_APPLICATION_ID", getProperty('parse_app_id')
+            buildConfigField "String", "PARSE_CLIENT_KEY", getProperty('parse_client_key')
+        }
+    }
+
+}
+
+
+
+
+/* Uncomment if you enable ProGuard and you want to automatically upload symbols on build.
+parse {
+  applicationId YOUR_APPLICATION_ID
+  masterKey YOUR_MASTER_KEY
+
+  // Make symbol upload automatic. Otherwise, use e.g. ../gradlew parseUploadSymbolsDebug;
+  uploadSymbols true
+}
+*/
+
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
+dependencies {
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.3'
+}
+
+
