@@ -32,6 +32,8 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.livejoints.analytics.ParseDataCollector;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -42,6 +44,7 @@ import java.util.UUID;
 public class BluetoothLeService extends Service {
     private final static String TAG = BluetoothLeService.class.getSimpleName();
 
+    private ParseDataCollector pdc = new ParseDataCollector();
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private String mBluetoothDeviceAddress;
@@ -113,7 +116,7 @@ public class BluetoothLeService extends Service {
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
-            Log.d(TAG, "new char: " + characteristic.toString());
+            //Log.d(TAG, "char changed" );
         }
     };
 
@@ -122,14 +125,24 @@ public class BluetoothLeService extends Service {
         sendBroadcast(intent);
     }
 
+    static int counter = 0;
+
     private void broadcastUpdate(final String action,
                                  final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
+
 
         if (UUID_ANGLE_MEASUREMENT.equals(characteristic.getUuid())) {
             String s = new String(characteristic.getStringValue(0));
             if (s != null && s.length() > 0) {
                 intent.putExtra(EXTRA_DATA, s);
+                Log.d(TAG, "new reading: " + s);
+                counter++;
+                if ((counter % 30) == 0) {
+                    //dc.add(angle);
+                    int angle = Integer.parseInt(s);
+                    pdc.add(angle);
+                }
             }
 
         } else {
