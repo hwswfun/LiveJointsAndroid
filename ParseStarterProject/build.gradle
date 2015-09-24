@@ -38,14 +38,14 @@ android {
 
     buildTypes {
         debug {
-            if (!project.hasProperty('parse_app_id')) {
+            if (getProperty('parse_app_id')==null) {
                 throw new RuntimeException("Couldn't find parse_app_id property. Did you forget to specify it in ~/.gradle/gradle.properties?")
             }
-            if (!project.hasProperty('parse_client_key')) {
+            if (getProperty('parse_client_key')==null) {
                 throw new RuntimeException("Couldn't find parse_client_key property. Did you forget to specify it in ~/.gradle/gradle.properties?")
             }
-            buildConfigField "String", "PARSE_APPLICATION_ID", project.getProperty('parse_app_id')
-            buildConfigField "String", "PARSE_CLIENT_KEY", project.getProperty('parse_client_key')
+            buildConfigField "String", "PARSE_APPLICATION_ID", getProperty('parse_app_id')
+            buildConfigField "String", "PARSE_CLIENT_KEY", getProperty('parse_client_key')
         }
     }
 
