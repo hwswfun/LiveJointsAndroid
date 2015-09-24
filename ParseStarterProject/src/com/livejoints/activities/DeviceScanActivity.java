@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.livejoints.bluetooth;
+package com.livejoints.activities;
 
 import android.app.Activity;
 import android.app.ListActivity;
@@ -37,6 +37,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.livejoints.R;
+import com.livejoints.bluetooth.OverViewActivity;
 
 import java.util.ArrayList;
 
