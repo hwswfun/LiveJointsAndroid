@@ -44,7 +44,7 @@ import java.util.UUID;
 public class BluetoothLeService extends Service {
     private final static String TAG = BluetoothLeService.class.getSimpleName();
 
-    private ParseDataCollector pdc = new ParseDataCollector();
+    private ParseDataCollector pdc = null;
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
     private String mBluetoothDeviceAddress;
@@ -65,6 +65,8 @@ public class BluetoothLeService extends Service {
             "com.example.bluetooth.le.ACTION_DATA_AVAILABLE";
     public final static String EXTRA_DATA =
             "com.example.bluetooth.le.EXTRA_DATA";
+    public final static String SENSOR_SUMMARY_AVAILABLE =
+            "com.example.bluetooth.le.SENSOR_SUMMARY_AVAILABLE";
 
 
 
@@ -138,10 +140,17 @@ public class BluetoothLeService extends Service {
                 intent.putExtra(EXTRA_DATA, s);
                 Log.d(TAG, "new reading: " + s);
                 counter++;
-                if ((counter % 30) == 0) {
+                if ((counter % 80) == 0) {
                     //dc.add(angle);
                     int angle = Integer.parseInt(s);
-                    pdc.add(angle);
+                    boolean newSensorSummaryAvailable = pdc.add(angle);
+                    if (newSensorSummaryAvailable==true) {
+                        Log.d(TAG, "=======> new sensor summary available");
+                        // need to broadcast that there is a new sensorsummary available
+                        final Intent ssIntent = new Intent(SENSOR_SUMMARY_AVAILABLE);
+                        sendBroadcast(ssIntent);
+                    }
+
                 }
             }
 
@@ -201,6 +210,10 @@ public class BluetoothLeService extends Service {
             Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
             return false;
         }
+
+        pdc = new ParseDataCollector();
+        // dont keep tons of the readings around.
+        pdc.setRetainOnlyPrevious(true);
 
         return true;
     }

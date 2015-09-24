@@ -1,6 +1,5 @@
 package com.livejoints.data;
 
-import com.google.gson.Gson;
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
 
@@ -106,7 +105,7 @@ public class ParseSensorSummary extends ParseObject {
         }
 
         this.put(SENSORSUMMARY_READINGS, detailSensorArray);
-        JSONArray detailSensorArray;
+        //JSONArray detailSensorArray;
 
         return true;
     }
@@ -156,12 +155,5 @@ public class ParseSensorSummary extends ParseObject {
         put(SENSORSUMMARY_AVERAGE, average);
     }
 
-
-    @Override
-    public String toString() {
-        Gson gson = new Gson();
-        String j = gson.toJson(this);
-        return j;
-    }
 
 }

@@ -70,7 +70,7 @@ public class DeviceControlActivity extends Activity
     private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics =
             new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
     ArrayList<HashMap<String, String>> gattServiceData = null;
-    ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData=null;
+    ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData = null;
 
     // Code to manage Service lifecycle.
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -116,24 +116,15 @@ public class DeviceControlActivity extends Activity
                 displayGattServices(mBluetoothLeService.getSupportedGattServices());
                 Log.d(TAG, "===> after getting gatt services");
 
-
-
                 listenForSensor();
-                //listenForSensor();
-/*
-                UUID UUID_ANGLE_MEASUREMENT = UUID.fromString(RFduinoGattAttributes.ANGLE_MEASUREMENT_CHARACTERISTIC);
-                int btProperties =    BluetoothGattCharacteristic.PROPERTY_READ | BluetoothGattCharacteristic.PROPERTY_NOTIFY;
-                int btPermissions = 0; //BluetoothGattCharacteristic.PERMISSION_READ;
-
-                BluetoothGattCharacteristic btCharacteristic = new BluetoothGattCharacteristic(UUID_ANGLE_MEASUREMENT, btProperties, btPermissions);
-                mBluetoothLeService.setCharacteristicNotification(btCharacteristic, true);
-*/
-
-
-
-
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
+            } else if (BluetoothLeService.SENSOR_SUMMARY_AVAILABLE.equals(action)) {
+                //Go get new sensor summary.
+
+                Log.d(TAG, "===> new sensorSummary is available");
+                //add to stuff
+
             }
         }
     };
@@ -153,7 +144,6 @@ public class DeviceControlActivity extends Activity
             }
         }
     }
-
 
 
     // If a given GATT characteristic is selected, check for supported features.  This sample
@@ -188,9 +178,7 @@ public class DeviceControlActivity extends Activity
                     }
                     return false;
                 }
-    };
-
-
+            };
 
 
     @Override
@@ -251,7 +239,7 @@ public class DeviceControlActivity extends Activity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.menu_connect:
                 mBluetoothLeService.connect(mDeviceAddress);
                 return true;
@@ -285,8 +273,6 @@ public class DeviceControlActivity extends Activity
             mDataField.setText(data);
         }
     }
-
-
 
 
     // Demonstrates how to iterate through the supported GATT Services/Characteristics.
@@ -338,6 +324,7 @@ public class DeviceControlActivity extends Activity
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
+        intentFilter.addAction(BluetoothLeService.SENSOR_SUMMARY_AVAILABLE);
         return intentFilter;
     }
 }
