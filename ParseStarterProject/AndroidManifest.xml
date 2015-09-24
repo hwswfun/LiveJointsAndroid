@@ -10,7 +10,6 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -49,6 +48,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".bluetooth.DeviceControlActivity" />
-
+        <activity
+            android:name=".activities.RealtimeDisplay"
+            android:label="@string/title_activity_realtime_display" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
     </application>
+
 </manifest>

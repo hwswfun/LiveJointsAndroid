@@ -28,4 +28,5 @@
     <string name="menu_scan">Scan</string>
     <string name="menu_stop">Stop</string>
     <string name="menu_main">Main</string>
+    <string name="title_activity_realtime_display">RealtimeDisplay</string>
 </resources>
