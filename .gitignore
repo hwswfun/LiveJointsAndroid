@@ -1,3 +1,5 @@
+AutoSave*.skp
+*~.skp
 ### Android template
 # Built application files
 *.apk
