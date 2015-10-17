@@ -47,6 +47,7 @@ public class TimelapseActivityFragment extends Fragment {
         mChart = (CandleStickChart) v.findViewById(R.id.chart1);
 
         setupChart();
+        refreshData();
         setHasOptionsMenu(true);
 
         return v;
