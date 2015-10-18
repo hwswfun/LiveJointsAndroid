@@ -35,7 +35,7 @@ public class LimbDisplayFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_realtime_display, container, false);
+        View v = inflater.inflate(R.layout.fragment_limb_display, container, false);
 
         mChart = (PieChart) v.findViewById(R.id.chart);
         noDataChart();
