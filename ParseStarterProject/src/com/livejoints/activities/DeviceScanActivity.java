@@ -37,7 +37,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.livejoints.R;
-import com.livejoints.bluetooth.OverViewActivity;
 
 import java.util.ArrayList;
 

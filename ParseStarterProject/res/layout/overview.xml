@@ -75,7 +75,7 @@
         android:layout_height="250dp" />
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools" android:id="@+id/fragment_timelapse"
-        android:name="com.livejoints.TimelapseActivityFragment"
+        android:name="com.livejoints.fragments.TimelapseActivityFragment"
         tools:layout="@layout/fragment_timelapse" android:layout_width="match_parent"
         android:layout_height="400dp" />
 </LinearLayout>

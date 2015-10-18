@@ -1,4 +1,4 @@
-package com.livejoints;
+package com.livejoints.fragments;
 
 import android.app.Fragment;
 import android.graphics.Color;
@@ -18,6 +18,7 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.CandleData;
 import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
+import com.livejoints.R;
 import com.livejoints.data.ParseSensorSummary;
 import com.parse.FindCallback;
 import com.parse.Parse;
@@ -77,10 +78,10 @@ public class TimelapseActivityFragment extends Fragment {
         YAxis leftAxis = mChart.getAxisLeft();
 //        leftAxis.setEnabled(false);
         leftAxis.setLabelCount(10, false);
-        leftAxis.setAxisMaxValue(200f);
+        leftAxis.setAxisMaxValue(100f);
         leftAxis.setDrawGridLines(false);
         leftAxis.setDrawAxisLine(false);
-        leftAxis.setStartAtZero(false);
+        leftAxis.setStartAtZero(true);
 
         YAxis rightAxis = mChart.getAxisRight();
         rightAxis.setEnabled(false);
@@ -129,7 +130,7 @@ public class TimelapseActivityFragment extends Fragment {
         //query.whereEqualTo("playerName", "Dan Stemkoski");
 
         query.orderByDescending("createdAt");
-        query.setLimit(5);
+        query.setLimit(10);
 
 
         query.findInBackground(new FindCallback<ParseSensorSummary>() {
@@ -167,7 +168,7 @@ public class TimelapseActivityFragment extends Fragment {
             float high = (float) pss.getHigh();
             float low = (float) pss.getLow();
 
-            // clamp
+            // clamp just in case sdtdev goes a bit nuts
             if (lowStddev < low) lowStddev=low;
             if (highStddev > high) highStddev = high;
 
@@ -177,6 +178,7 @@ public class TimelapseActivityFragment extends Fragment {
             yVals1.add(new CandleEntry(i, high, low, highStddev, lowStddev));
         }
 
+        // The numbers under the chart on X axis
         ArrayList<String> xVals = new ArrayList<String>();
         for (int i = 0; i < readings.size(); i++) {
             if (i==0) xVals.add(""+0);
@@ -185,14 +187,19 @@ public class TimelapseActivityFragment extends Fragment {
 
         CandleDataSet set1 = new CandleDataSet(yVals1, "Data Set");
         set1.setAxisDependency(YAxis.AxisDependency.LEFT);
-//        set1.setColor(Color.rgb(80, 80, 80));
-        set1.setShadowColor(Color.DKGRAY);
-        set1.setShadowWidth(0.7f);
-        set1.setDecreasingColor(Color.RED);
-        set1.setDecreasingPaintStyle(Paint.Style.STROKE);
-        set1.setIncreasingColor(Color.rgb(122, 242, 84));
+        set1.setColor(Color.BLUE);
+        set1.setShadowColor(Color.RED);
+        set1.setShadowWidth(1.7f);
+        set1.setDecreasingColor(Color.GREEN);
+        set1.setDecreasingPaintStyle(Paint.Style.FILL_AND_STROKE);
+        set1.setIncreasingColor(Color.CYAN);
         set1.setIncreasingPaintStyle(Paint.Style.FILL);
-        //set1.setHighlightLineWidth(1f);
+        set1.setHighlightLineWidth(1.0f);
+        set1.setDrawHorizontalHighlightIndicator(true);
+        set1.setDrawHighlightIndicators(true);
+        set1.setHighLightColor(Color.CYAN);
+        set1.setBodySpace(2.0f);
+        set1.setDrawValues(true);
 
         CandleData data = new CandleData(xVals, set1);
 

@@ -24,12 +24,12 @@ import java.util.ArrayList;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class RealtimeDisplayFragment extends Fragment {
-    private final static String TAG = RealtimeDisplayFragment.class.getSimpleName();
+public class LimbDisplayFragment extends Fragment {
+    private final static String TAG = LimbDisplayFragment.class.getSimpleName();
 
     private PieChart mChart;
 
-    public RealtimeDisplayFragment() {
+    public LimbDisplayFragment() {
     }
 
     @Override

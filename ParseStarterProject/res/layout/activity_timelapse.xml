@@ -1,5 +1,7 @@
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/fragment"
-    android:name="com.livejoints.TimelapseActivityFragment"
-    tools:layout="@layout/fragment_timelapse" android:layout_width="match_parent"
-    android:layout_height="500dp" />
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment"
+    android:name="com.livejoints.fragments.TimelapseActivityFragment"
+    android:layout_width="match_parent"
+    android:layout_height="500dp"
+    tools:layout="@layout/fragment_timelapse" />

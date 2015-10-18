@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.livejoints.bluetooth;
+package com.livejoints.activities;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -35,7 +35,9 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.livejoints.R;
-import com.livejoints.TimelapseActivityFragment;
+import com.livejoints.bluetooth.BluetoothLeService;
+import com.livejoints.bluetooth.RFduinoGattAttributes;
+import com.livejoints.fragments.TimelapseActivityFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,7 +1,9 @@
-package com.livejoints;
+package com.livejoints.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+
+import com.livejoints.R;
 
 public class TimelapseActivity extends Activity {
 

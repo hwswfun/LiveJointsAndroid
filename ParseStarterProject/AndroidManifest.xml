@@ -38,7 +38,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".bluetooth.OverViewActivity" />
+        <activity android:name=".activities.OverViewActivity" />
         <activity
             android:name=".activities.RealtimeDisplay"
             android:label="@string/title_activity_realtime_display" >
@@ -47,7 +47,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TimelapseActivity"
+            android:name=".activities.TimelapseActivity"
             android:label="@string/title_activity_timelapse" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
