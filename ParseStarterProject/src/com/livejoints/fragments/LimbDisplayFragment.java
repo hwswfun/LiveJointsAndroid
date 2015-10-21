@@ -5,11 +5,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.livejoints.R;
@@ -28,6 +30,9 @@ public class LimbDisplayFragment extends Fragment {
 
     private final int NUMBER_OF_CATEGORIES = 35;
 
+    ImageView upperArm;
+    ImageView lowerArm;
+
     public LimbDisplayFragment() {
     }
 
@@ -40,8 +45,25 @@ public class LimbDisplayFragment extends Fragment {
 
         printValues();
 
-        //noDataChart();
+        upperArm = (ImageView)v.findViewById(R.id.upperArmImageView);
+        lowerArm = (ImageView)v.findViewById(R.id.lowerArmImageView);
+
+        upperArm.setRotation(0);
+        upperArm.setScaleX(0.5f);
+        upperArm.setScaleY(0.5f);
+        upperArm.setBackgroundColor(Color.TRANSPARENT);
+
+        lowerArm.setRotation(45);
+        lowerArm.setScaleX(0.5f);
+        lowerArm.setScaleY(0.5f);
+        lowerArm.setBackgroundColor(Color.TRANSPARENT);
+
         return v;
+    }
+
+
+    private void setAngle(int angle) {
+        lowerArm.setRotation(angle);
     }
 
     private void printValues() {
@@ -140,6 +162,7 @@ public class LimbDisplayFragment extends Fragment {
                         //Log.d(TAG, "data received =========>" + angleStr);
                         int angle = Integer.parseInt(angleStr);
 
+                        setAngle(angle);
                         int index = angle / 10;
                         if (index > NUMBER_OF_CATEGORIES) index = NUMBER_OF_CATEGORIES;
 
@@ -147,7 +170,7 @@ public class LimbDisplayFragment extends Fragment {
                         valuesTotal++;
                         alignValues();
                         adjustedValues();
-                        printAdjustedValues();
+                        //printAdjustedValues();
                         //printValues();
                         //Log.d(TAG, "data received int =========>" + angle);
                         //armAngle(angle);
