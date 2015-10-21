@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,13 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
 import com.livejoints.R;
 import com.livejoints.bluetooth.BluetoothLeService;
-
-import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -27,7 +21,12 @@ import java.util.ArrayList;
 public class LimbDisplayFragment extends Fragment {
     private final static String TAG = LimbDisplayFragment.class.getSimpleName();
 
+    int valuesByTens[] = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    int adjustedValuesByTens[] = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    long valuesTotal = 0;
     private PieChart mChart;
+
+    private final int NUMBER_OF_CATEGORIES = 35;
 
     public LimbDisplayFragment() {
     }
@@ -38,11 +37,56 @@ public class LimbDisplayFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_limb_display, container, false);
 
         mChart = (PieChart) v.findViewById(R.id.chart);
-        noDataChart();
 
+        printValues();
+
+        //noDataChart();
         return v;
     }
 
+    private void printValues() {
+        for (int i = 0; i < NUMBER_OF_CATEGORIES; i++) {
+            Log.d(TAG, "" + i + ": " + valuesByTens[i]);
+        }
+    }
+
+    final long MAX_VALUES_TOTAL = 50000;
+
+    private void alignValues() {
+        if (valuesTotal > MAX_VALUES_TOTAL) {
+            valuesTotal = valuesTotal / 100;
+
+            for (int i = 0; i < NUMBER_OF_CATEGORIES; i++) {
+                valuesByTens[i] = valuesByTens[i] / 100;
+            }
+        }
+    }
+
+
+    final static int CLIP_VALUE = 100;
+    // ok with 100% in each of the 36 categories.  So lets set bar at valuesTotal / 36.  Then get percent form that
+
+    private void adjustedValues() {
+        double saturationValue = (double)valuesTotal / (double)NUMBER_OF_CATEGORIES;
+        if (saturationValue < 100) saturationValue = 100;
+
+        for (int i = 0; i < NUMBER_OF_CATEGORIES; i++) {
+            double currentValue = (double) valuesByTens[i];
+
+
+            double percent = (currentValue / saturationValue) * 100.0;
+            if (percent > CLIP_VALUE) percent = CLIP_VALUE;
+
+            adjustedValuesByTens[i] = (int) percent;
+        }
+
+    }
+
+    private void printAdjustedValues() {
+        for (int i = 0; i < NUMBER_OF_CATEGORIES; i++) {
+            Log.d(TAG, "adjusted " + i + ": " + adjustedValuesByTens[i]);
+        }
+    }
 
     @Override
     public void onResume() {
@@ -59,39 +103,6 @@ public class LimbDisplayFragment extends Fragment {
 
 
 
-    private void noDataChart() {
-        ArrayList<String> xVals = new ArrayList<String>();
-        xVals.add("On");
-        xVals.add("Off");
-
-        ArrayList<Entry> yVals1 = new ArrayList<Entry>();
-        Entry e1 = new Entry(90.0f,0);
-        Entry e2 = new Entry(10.0f,1);
-        yVals1.add(e1);
-        yVals1.add(e2);
-
-        PieDataSet dataSet = new PieDataSet(yVals1, "Election Results");
-
-        ArrayList<Integer> colors = new ArrayList<Integer>();
-
-        colors.add(Color.BLUE);
-        colors.add(Color.RED);
-
-        dataSet.setColors(colors);
-
-        PieData data = new PieData(xVals, dataSet);
-        //data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(11f);
-        data.setValueTextColor(Color.WHITE);
-
-        mChart.setData(data);
-
-        // undo all highlights
-        mChart.highlightValues(null);
-
-        mChart.invalidate();
-    }
-
 
     static long counter = 0;
 
@@ -102,7 +113,6 @@ public class LimbDisplayFragment extends Fragment {
     // ACTION_DATA_AVAILABLE: received data from the device.  This can be a result of read
     //                        or notification operations.
     private final BroadcastReceiver mGattUpdateReceiver = new BroadcastReceiver() {
-
 
 
         @Override
@@ -129,10 +139,20 @@ public class LimbDisplayFragment extends Fragment {
                     try {
                         //Log.d(TAG, "data received =========>" + angleStr);
                         int angle = Integer.parseInt(angleStr);
-                        //Log.d(TAG, "data received int =========>" + angle);
-                        armAngle(angle);
 
-                    } catch(NumberFormatException nfe) {
+                        int index = angle / 10;
+                        if (index > NUMBER_OF_CATEGORIES) index = NUMBER_OF_CATEGORIES;
+
+                        valuesByTens[index]++;
+                        valuesTotal++;
+                        alignValues();
+                        adjustedValues();
+                        printAdjustedValues();
+                        //printValues();
+                        //Log.d(TAG, "data received int =========>" + angle);
+                        //armAngle(angle);
+
+                    } catch (NumberFormatException nfe) {
                         Log.d(TAG, "bummer.  value for angle was wierd: " + angleStr);
                     }
                 } else {
@@ -155,45 +175,6 @@ public class LimbDisplayFragment extends Fragment {
     }
 
 
-    private void armAngle(int angle) {
-        //Log.d(TAG, "create pie chart for angle: " + angle);
-        ArrayList<String> xVals = new ArrayList<String>();
-        xVals.add("fOn");
-        xVals.add("fOff");
 
-        ArrayList<Entry> yVals1 = new ArrayList<Entry>();
-        Entry e1 = new Entry(angle,0);
-        Entry e2 = new Entry(100-angle,1);
-        yVals1.add(e1);
-        yVals1.add(e2);
-
-        PieDataSet dataSet = new PieDataSet(yVals1, "Election Results");
-
-        ArrayList<Integer> colors = new ArrayList<Integer>();
-
-        colors.add(Color.BLACK);
-        colors.add(Color.WHITE);
-
-        dataSet.setColors(colors);
-
-
-
-        PieData data = new PieData(xVals, dataSet);
-        //data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(11f);
-        data.setValueTextColor(Color.WHITE);
-
-
-
-        mChart.setData(data);
-
-
-        mChart.setUsePercentValues(false);
-
-        // undo all highlights
-        mChart.highlightValues(null);
-
-        mChart.invalidate();
-    }
 
 }
