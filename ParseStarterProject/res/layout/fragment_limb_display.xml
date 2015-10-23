@@ -11,12 +11,12 @@
         android:layout_width="400dp"
         android:layout_height="400dp">
 
-        <ImageView
+        <com.livejoints.CircleChart
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/gradedImageView"
+            android:id="@+id/circleChart"
             android:layout_gravity="center"
-            android:src="@drawable/graded_circle" />
+            android:src="@drawable/graded_circle"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -32,12 +32,7 @@
             android:layout_gravity="center"
             android:src="@drawable/lower_arm" />
 
-        <com.livejoints.CircleChart
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/circleChart"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_launcher"/>
+
 
     </FrameLayout>
 

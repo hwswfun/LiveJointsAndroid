@@ -7,12 +7,12 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.view.View;
+import android.widget.ImageView;
 
 /**
  * Created by nathantofte on 10/20/15.
  */
-public class CircleChart extends View {
+public class CircleChart extends ImageView {
     public CircleChart(Context context) {
         super(context);
         paint = new Paint();
@@ -29,11 +29,9 @@ public class CircleChart extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-       // canvas.drawArc(getLeft(),getTop(),getRight(),getBottom(),40.0f,10.0f,true,paint);
 
-
-        drawArcSegment(canvas,getWidth()/2, getHeight()/2, 50.0f, 130.0f, 10.0f , 10.0f, paint, null);
         super.onDraw(canvas);
+        drawArcSegment(canvas,getWidth()/2, getHeight()/2, 50.0f, 130.0f, 10.0f , 10.0f, paint, null);
     }
 
 
