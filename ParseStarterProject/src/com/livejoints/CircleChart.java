@@ -100,7 +100,74 @@ public class CircleChart extends ImageView {
     protected void onDraw(Canvas canvas) {
 
         super.onDraw(canvas);
-        drawArcSegment(canvas, getWidth() / 2, getHeight() / 2, 50.0f, 130.0f, 10.0f, 10.0f, paint, null);
+        //drawArcSegment(canvas, getWidth() / 2, getHeight() / 2, 50.0f, 130.0f, 10.0f, 10.0f, paint, null);
+
+
+        int centerX = getWidth() / 2;
+        int centerY = getHeight() / 2;
+        int radiusOutside = 150;
+        int radiusInside = 30;
+        int sweepAngle = 10;
+
+        RectF outerRect = new RectF(centerX - radiusOutside, centerY - radiusOutside, centerX + radiusOutside, centerY + radiusOutside);
+        RectF innerRect = new RectF(centerX - radiusInside, centerY - radiusInside, centerX + radiusInside, centerY + radiusInside);
+//
+        int val0 = 50;
+        int val1 = 100;
+        int val2 = 50;
+
+
+        int startAngle = 0;
+        int prevAngle = startAngle;
+
+
+        Path segmentPath = new Path();
+        double start = Math.toRadians(startAngle);
+
+        //radiusInside = 20;
+        radiusOutside = val0;
+
+        segmentPath.moveTo((float) (centerX + radiusInside * Math.cos(start)), (float) (centerY + radiusInside * Math.sin(start)));
+ //       segmentPath.lineTo((float) (centerX + radiusOutside * Math.cos(start)), (float) (centerY + radiusOutside * Math.sin(start)));
+        segmentPath.arcTo(outerRect, startAngle, sweepAngle);
+
+        //radiusInside = 20;
+        prevAngle = startAngle + sweepAngle;
+        radiusOutside = val1;
+        sweepAngle = 10;
+
+        outerRect = new RectF(centerX - radiusOutside, centerY - radiusOutside, centerX + radiusOutside, centerY + radiusOutside);
+
+        //segmentPath.moveTo((float)(centerX + radiusInside * Math.cos(start)), (float)(centerY + radiusInside * Math.sin(start)));
+        //segmentPath.lineTo((float) (centerX + radiusOutside * Math.cos(start)), (float) (centerY + radiusOutside * Math.sin(start)));
+        segmentPath.arcTo(outerRect, prevAngle, sweepAngle);
+
+
+        double end = Math.toRadians(startAngle + sweepAngle);
+        //segmentPath.lineTo((float)(centerX + radiusInside * Math.cos(end)), (float)(centerY + radiusInside * Math.sin(end)));
+        segmentPath.arcTo(innerRect, startAngle + sweepAngle, -sweepAngle);
+
+
+
+
+        canvas.drawPath(segmentPath, paint);
+
+
+//
+//        segmentPath.moveTo(getWidth() / 2.0f, 0);
+//
+//        segmentPath.arcTo(outerRect, startAngle, 10);
+//        double end = Math.toRadians(startAngle + sweepAngle);
+//        segmentPath.lineTo((float)(centerX + rInn * Math.cos(end)), (float)(centerY + rInn * Math.sin(end)));
+//
+//        segmentPath.arcTo(innerRect, startAngle + sweepAngle, -sweepAngle);
+//        if (fill != null) {
+//            canvas.drawPath(segmentPath, fill);
+//        }
+//        if (stroke != null) {
+//            canvas.drawPath(segmentPath, stroke);
+//        }
+
     }
 
 
