@@ -36,7 +36,15 @@ public class CircleChart extends ImageView {
         setBackgroundColor(Color.TRANSPARENT);
     }
 
+    public void addValue(int angle) {
+        int index = angle / 10;
+        if (index > NUMBER_OF_CATEGORIES) index = NUMBER_OF_CATEGORIES;
 
+        valuesByTens[index]++;
+        valuesTotal++;
+        alignValues();
+        adjustedValues();
+    }
 
 
     private void printValues() {

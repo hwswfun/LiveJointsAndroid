@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.livejoints.CircleChart;
 import com.livejoints.R;
 import com.livejoints.bluetooth.BluetoothLeService;
 
@@ -26,6 +27,7 @@ public class LimbDisplayFragment extends Fragment {
 
     ImageView upperArm;
     ImageView lowerArm;
+    CircleChart circleChart;
 
     public LimbDisplayFragment() {
     }
@@ -37,6 +39,7 @@ public class LimbDisplayFragment extends Fragment {
 
         upperArm = (ImageView)v.findViewById(R.id.upperArmImageView);
         lowerArm = (ImageView)v.findViewById(R.id.lowerArmImageView);
+        circleChart = (CircleChart)v.findViewById(R.id.circleChart);
 
         upperArm.setRotation(0);
         upperArm.setScaleX(0.5f);
@@ -109,6 +112,7 @@ public class LimbDisplayFragment extends Fragment {
                         int angle = Integer.parseInt(angleStr);
 
                         setAngle(angle);
+                        circleChart.addValue(angle);
 //                        int index = angle / 10;
 //                        if (index > NUMBER_OF_CATEGORIES) index = NUMBER_OF_CATEGORIES;
 //
