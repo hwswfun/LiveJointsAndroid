@@ -113,6 +113,14 @@ public class LimbDisplayFragment extends Fragment {
 
                         setAngle(angle);
                         circleChart.addValue(angle);
+//                        if (counter < 0) {
+//                            counter = 0;
+//                            circleChart.addValue(angle);
+//                        } else {
+//                            counter--;
+//
+//                        }
+
 //                        int index = angle / 10;
 //                        if (index > NUMBER_OF_CATEGORIES) index = NUMBER_OF_CATEGORIES;
 //
