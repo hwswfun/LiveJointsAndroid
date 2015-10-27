@@ -116,7 +116,7 @@ public class CircleChart extends ImageView {
         RectF outerRect; // = new RectF(centerX - radiusOutside, centerY - radiusOutside, centerX + radiusOutside, centerY + radiusOutside);
         RectF innerRect = new RectF(centerX - radiusInside, centerY - radiusInside, centerX + radiusInside, centerY + radiusInside);
 
-        int startAngle = 0;
+        int startAngle = 270;
         int prevAngle = startAngle;
 
 
@@ -127,12 +127,13 @@ public class CircleChart extends ImageView {
 
         for (int i = 0; i < NUMBER_OF_CATEGORIES-20; i++) {
             Log.d(TAG, "adjusted " + i + ": " + adjustedValuesByTens[i]);
-            prevAngle = prevAngle + sweepAngle;
-            radiusOutside = 50 + adjustedValuesByTens[i];
+
+            radiusOutside = 60 + adjustedValuesByTens[i];
             sweepAngle = 10;
 
             outerRect = new RectF(centerX - radiusOutside, centerY - radiusOutside, centerX + radiusOutside, centerY + radiusOutside);
             segmentPath.arcTo(outerRect, prevAngle, sweepAngle);
+            prevAngle = prevAngle + sweepAngle;
         }
 
         int currentAngle = startAngle + prevAngle + sweepAngle;
