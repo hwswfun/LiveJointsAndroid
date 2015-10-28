@@ -110,12 +110,14 @@ public class CircleChart extends ImageView {
     void drawGraph(Canvas canvas) {
 
         int radiusOutside;
+        int radiusOutsideStart = 70;
         int radiusInside = 40;
+        int startAngle = 270;  // because 0 degrees is to the right.  We add 270 to get "0" as top.
         int sweepAngle = 10;
 
         innerRect = new RectF(centerX - radiusInside, centerY - radiusInside, centerX + radiusInside, centerY + radiusInside);
 
-        int startAngle = 270;
+
         int prevAngle = startAngle;
 
         double start = Math.toRadians(startAngle);
@@ -126,19 +128,14 @@ public class CircleChart extends ImageView {
         for (int i = 0; i < NUMBER_OF_CATEGORIES-20; i++) {
             //Log.d(TAG, "adjusted " + i + ": " + adjustedValuesByTens[i]);
 
-            radiusOutside = 70 + adjustedValuesByTens[i];
-            sweepAngle = 10;
+            radiusOutside = radiusOutsideStart + adjustedValuesByTens[i];
 
             outerRect = new RectF(centerX - radiusOutside, centerY - radiusOutside, centerX + radiusOutside, centerY + radiusOutside);
             segmentPath.arcTo(outerRect, prevAngle, sweepAngle);
             prevAngle = prevAngle + sweepAngle;
         }
 
-        int currentAngle = startAngle + prevAngle + sweepAngle;
-
-        //double end = Math.toRadians(prevAngle + sweepAngle);
-        //segmentPath.lineTo((float)(centerX + radiusInside * Math.cos(end)), (float)(centerY + radiusInside * Math.sin(end)));
-        segmentPath.arcTo(innerRect, currentAngle, -currentAngle);
+        segmentPath.arcTo(innerRect, prevAngle, -prevAngle);
 
         canvas.drawPath(segmentPath, paint);
     }
