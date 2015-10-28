@@ -62,6 +62,8 @@ public class CircleChart extends ImageView {
         overlayPaint = new Paint();
         overlayPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
         overlayPaint.setAntiAlias(true);
+
+        segmentPath = new Path();
     }
 
 
@@ -73,6 +75,9 @@ public class CircleChart extends ImageView {
             transparencyMaskCanvas = new Canvas(transparencyMaskBitmap);
             chartBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
             chartCanvas = new Canvas(chartBitmap);
+
+            centerX = w / 2;
+            centerY = h / 2;
         }
         super.onSizeChanged(w, h, oldw, oldh);
     }
@@ -96,24 +101,26 @@ public class CircleChart extends ImageView {
         canvas.drawBitmap(chartBitmap, 0, 0, overlayPaint);
     }
 
+    RectF outerRect; // outside of arc for chart
+    RectF innerRect; // inside of arc for chart
+    int centerX = 0;
+    int centerY = 0;
+    Path segmentPath = null;
 
     void drawGraph(Canvas canvas) {
-        int centerX = getWidth() / 2;
-        int centerY = getHeight() / 2;
-        int radiusOutside = 150;
+
+        int radiusOutside;
         int radiusInside = 40;
         int sweepAngle = 10;
 
-        RectF outerRect; // = new RectF(centerX - radiusOutside, centerY - radiusOutside, centerX + radiusOutside, centerY + radiusOutside);
-        RectF innerRect = new RectF(centerX - radiusInside, centerY - radiusInside, centerX + radiusInside, centerY + radiusInside);
+        innerRect = new RectF(centerX - radiusInside, centerY - radiusInside, centerX + radiusInside, centerY + radiusInside);
 
         int startAngle = 270;
         int prevAngle = startAngle;
 
-
-        Path segmentPath = new Path();
         double start = Math.toRadians(startAngle);
 
+        segmentPath.reset();
         segmentPath.moveTo((float) (centerX + radiusInside * Math.cos(start)), (float) (centerY + radiusInside * Math.sin(start)));
 
         for (int i = 0; i < NUMBER_OF_CATEGORIES-20; i++) {
