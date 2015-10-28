@@ -1,10 +1,13 @@
 package com.livejoints;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -33,7 +36,8 @@ public class CircleChart extends ImageView {
         super(context, attrs);
         paint = new Paint();
         paint.setColor(Color.CYAN);
-        setBackgroundColor(Color.TRANSPARENT);
+        setBackgroundColor(Color.GREEN);
+        init();
     }
 
     public void addValue(int angle) {
@@ -94,19 +98,59 @@ public class CircleChart extends ImageView {
         }
     }
 
+    Paint eraser;
+    Bitmap transparencyMaskBitmap;
+    Canvas transparencyMaskCanvas;
+    Bitmap chartBitmap;
+    Canvas chartCanvas;
 
 
-
+    void init() {
+        eraser = new Paint();
+        eraser.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_IN));
+        //eraser.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        eraser.setAntiAlias(true);
+    }
 
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        if (w != oldw || h != oldh) {
+            transparencyMaskBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            transparencyMaskCanvas = new Canvas(transparencyMaskBitmap);
+            chartBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            chartCanvas = new Canvas(chartBitmap);
+        }
+        super.onSizeChanged(w, h, oldw, oldh);
+    }
 
-        super.onDraw(canvas);
-        Log.d(TAG,"onDraw()");
+Paint mypaint;
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+this.setBackgroundColor(Color.RED);
+        setBackground(getResources().getDrawable(R.drawable.ic_launcher));
+
+        //setBackground(R.drawable.ic_launcher);
+        canvas.drawColor(Color.TRANSPARENT);
+        super.onDraw(chartCanvas);
+        Log.d(TAG, "onDraw()");
+        transparencyMaskCanvas.drawColor(Color.TRANSPARENT);
+        drawGraph(transparencyMaskCanvas);
+        chartCanvas.drawBitmap(transparencyMaskBitmap, 0, 0, eraser);
         //drawArcSegment(canvas, getWidth() / 2, getHeight() / 2, 50.0f, 130.0f, 10.0f, 10.0f, paint, null);
 
 
+        mypaint = new Paint();
+        mypaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OVER));
+        //eraser.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        mypaint.setAntiAlias(true);
+        canvas.drawBitmap(chartBitmap, 0, 0, mypaint);
+
+    }
+
+
+    void drawGraph(Canvas canvas) {
         int centerX = getWidth() / 2;
         int centerY = getHeight() / 2;
         int radiusOutside = 150;
@@ -126,7 +170,7 @@ public class CircleChart extends ImageView {
         segmentPath.moveTo((float) (centerX + radiusInside * Math.cos(start)), (float) (centerY + radiusInside * Math.sin(start)));
 
         for (int i = 0; i < NUMBER_OF_CATEGORIES-20; i++) {
-            Log.d(TAG, "adjusted " + i + ": " + adjustedValuesByTens[i]);
+            //Log.d(TAG, "adjusted " + i + ": " + adjustedValuesByTens[i]);
 
             radiusOutside = 60 + adjustedValuesByTens[i];
             sweepAngle = 10;
@@ -145,6 +189,6 @@ public class CircleChart extends ImageView {
         canvas.drawPath(segmentPath, paint);
     }
 
-
-
 }
+
+

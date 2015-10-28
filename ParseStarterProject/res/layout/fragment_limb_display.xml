@@ -9,13 +9,16 @@
 
     <FrameLayout
         android:layout_width="400dp"
-        android:layout_height="400dp">
+        android:layout_height="400dp"
+        android:backgroundTint="@color/Aquamarine">
 
         <com.livejoints.CircleChart
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/circleChart"
             android:layout_gravity="center"
+            android:background="@color/Teal"
+            android:backgroundTint="@color/AliceBlue"
             android:src="@drawable/graded_circle"/>
 
         <ImageView
