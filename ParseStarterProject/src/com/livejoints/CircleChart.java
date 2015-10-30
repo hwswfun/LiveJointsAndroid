@@ -66,7 +66,7 @@ public class CircleChart extends ImageView {
         segmentPath = new Path();
     }
 
-
+int maxRadius=0;
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -78,6 +78,12 @@ public class CircleChart extends ImageView {
 
             centerX = w / 2;
             centerY = h / 2;
+
+            if (centerX < centerY) {
+                maxRadius = centerY;
+            } else {
+                maxRadius = centerX;
+            }
         }
         super.onSizeChanged(w, h, oldw, oldh);
     }
@@ -92,7 +98,7 @@ public class CircleChart extends ImageView {
         transparencyMaskBitmap.eraseColor(Color.TRANSPARENT);
 
         // draw the chart as an opaque color with transparent non-chart part.
-        drawGraph(transparencyMaskCanvas);
+        drawInsideCircleGraph(transparencyMaskCanvas);
 
         // non transparent colors in transparencyMaskCanvas allow the original src "chartCanvas" to
         // show through.  any points transparent in transparencyMaskCanvas become transparent.
@@ -107,7 +113,7 @@ public class CircleChart extends ImageView {
     int centerY = 0;
     Path segmentPath = null;
 
-    void drawGraph(Canvas canvas) {
+    void drawOutsideCircleGraph(Canvas canvas) {
 
         int radiusOutside;
         int radiusOutsideStart = 70;
@@ -141,6 +147,39 @@ public class CircleChart extends ImageView {
     }
 
 
+    void drawInsideCircleGraph(Canvas canvas) {
+
+
+        int radiusOutside = maxRadius;
+        int radiusInsideStart = 70;
+        int radiusInside = 40;
+        int startAngle = 270;  // because 0 degrees is to the right.  We add 270 to get "0" as top.
+        int sweepAngle = 10;
+
+        outerRect = new RectF(centerX - radiusOutside, centerY - radiusOutside, centerX + radiusOutside, centerY + radiusOutside);
+
+
+        int prevAngle = startAngle;
+
+        double start = Math.toRadians(startAngle);
+
+        segmentPath.reset();
+        segmentPath.moveTo((float) (centerX + radiusOutside * Math.cos(start)), (float) (centerY + radiusOutside * Math.sin(start)));
+
+        for (int i = 0; i < NUMBER_OF_CATEGORIES-20; i++) {
+            //Log.d(TAG, "adjusted " + i + ": " + adjustedValuesByTens[i]);
+
+            radiusInside = radiusInsideStart + adjustedValuesByTens[i];
+
+            innerRect = new RectF(centerX - radiusInside, centerY - radiusInside, centerX + radiusInside, centerY + radiusInside);
+            segmentPath.arcTo(innerRect, prevAngle, sweepAngle);
+            prevAngle = prevAngle + sweepAngle;
+        }
+
+        segmentPath.arcTo(outerRect, prevAngle, startAngle-prevAngle);
+
+        canvas.drawPath(segmentPath, paint);
+    }
 
 
 
