@@ -117,14 +117,6 @@
             android:layout_height="250dp"
             tools:layout="@layout/fragment_realtime_display" />
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="250dp"
-            android:layout_weight="1"
-            android:id="@+id/stuff"
-            android:layout_gravity="center"
-            android:src="@drawable/test_chart" />
-
     </LinearLayout>
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"

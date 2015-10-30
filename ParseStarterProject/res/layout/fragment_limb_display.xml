@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/circleChart"
             android:layout_gravity="center"
-            android:src="@drawable/graded_circle"/>
+            android:src="@drawable/ryg_donut"/>
 
         <ImageView
             android:layout_width="wrap_content"

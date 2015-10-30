@@ -2,8 +2,8 @@
 <shape
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="ring"
-    android:innerRadius="1dp"
-    android:thickness="20dp"
+    android:innerRadius="25dp"
+    android:thickness="100dp"
     android:useLevel="false">
 
     <!--solid android:color="#ababf2" /-->
@@ -11,11 +11,10 @@
         android:startColor="#FF0000"
         android:centerColor="#00FF00"
         android:endColor="#0000FF"
-        android:innerRadius="10dp"
-        android:gradientRadius="15dp"
+        android:gradientRadius="25dp"
         android:type="radial" />
 
     <size
-        android:height="50dp"
-        android:width="50dp" />
+        android:height="400dp"
+        android:width="400dp" />
 </shape>
