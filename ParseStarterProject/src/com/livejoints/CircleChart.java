@@ -20,7 +20,7 @@ public class CircleChart extends ImageView {
     private final static String TAG = CircleChart.class.getSimpleName();
 
     int valuesByTens[] = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    int adjustedValuesByTens[] = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    double adjustedValuesByTens[] = new double[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     long valuesTotal = 0;
 
     private final int NUMBER_OF_CATEGORIES = 35;
@@ -134,7 +134,7 @@ int maxRadius=0;
         for (int i = 0; i < NUMBER_OF_CATEGORIES-20; i++) {
             //Log.d(TAG, "adjusted " + i + ": " + adjustedValuesByTens[i]);
 
-            radiusOutside = radiusOutsideStart + adjustedValuesByTens[i];
+            radiusOutside = radiusOutsideStart + (int)(100.0 * adjustedValuesByTens[i]);
 
             outerRect = new RectF(centerX - radiusOutside, centerY - radiusOutside, centerX + radiusOutside, centerY + radiusOutside);
             segmentPath.arcTo(outerRect, prevAngle, sweepAngle);
@@ -151,10 +151,11 @@ int maxRadius=0;
 
 
         int radiusOutside = maxRadius;
-        int radiusInsideStart = 70;
+        int radiusInsideStart = maxRadius/2;
         int radiusInside = 40;
         int startAngle = 270;  // because 0 degrees is to the right.  We add 270 to get "0" as top.
         int sweepAngle = 10;
+        double radiusRange = radiusOutside - radiusInsideStart;
 
         outerRect = new RectF(centerX - radiusOutside, centerY - radiusOutside, centerX + radiusOutside, centerY + radiusOutside);
 
@@ -169,7 +170,8 @@ int maxRadius=0;
         for (int i = 0; i < NUMBER_OF_CATEGORIES-20; i++) {
             //Log.d(TAG, "adjusted " + i + ": " + adjustedValuesByTens[i]);
 
-            radiusInside = radiusInsideStart + adjustedValuesByTens[i];
+            // adjustedValuesByTens should be 0.0 to 1.0
+            radiusInside = radiusInsideStart + (int)(radiusRange*adjustedValuesByTens[i]);
 
             innerRect = new RectF(centerX - radiusInside, centerY - radiusInside, centerX + radiusInside, centerY + radiusInside);
             segmentPath.arcTo(innerRect, prevAngle, sweepAngle);
@@ -218,7 +220,7 @@ int maxRadius=0;
     }
 
 
-    final static int CLIP_VALUE = 100;
+    final static double CLIP_VALUE = 1.0;
     // ok with 100% in each of the 36 categories.  So lets set bar at valuesTotal / 36.  Then get percent form that
 
     private void adjustedValues() {
@@ -229,10 +231,10 @@ int maxRadius=0;
             double currentValue = (double) valuesByTens[i];
 
 
-            double percent = (currentValue / saturationValue) * 100.0;
+            double percent = currentValue / saturationValue;
             if (percent > CLIP_VALUE) percent = CLIP_VALUE;
 
-            adjustedValuesByTens[i] = (int) percent;
+            adjustedValuesByTens[i] = percent;
         }
 
     }
