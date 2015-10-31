@@ -70,4 +70,6 @@ repositories {
 
 dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.5'
+    compile 'org.apache.commons:commons-math3:3.5'
+
 }

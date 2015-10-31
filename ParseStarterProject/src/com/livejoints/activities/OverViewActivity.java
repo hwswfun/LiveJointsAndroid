@@ -36,6 +36,7 @@ import android.widget.ExpandableListView;
 import com.livejoints.R;
 import com.livejoints.bluetooth.BluetoothLeService;
 import com.livejoints.bluetooth.RFduinoGattAttributes;
+import com.livejoints.fragments.LimbDisplayFragment;
 import com.livejoints.fragments.TimelapseActivityFragment;
 
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class OverViewActivity extends Activity
     private final String LIST_UUID = "UUID";
 
     TimelapseActivityFragment timelapseFragment=null;
-
+    LimbDisplayFragment limbDisplayFragment = null;
 
     private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics =
             new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
@@ -199,6 +200,10 @@ public class OverViewActivity extends Activity
 
         timelapseFragment = (TimelapseActivityFragment)getFragmentManager().findFragmentById(R.id.fragment_timelapse);
         timelapseFragment.refreshData();
+
+        limbDisplayFragment = (LimbDisplayFragment)getFragmentManager().findFragmentById(R.id.fragment_limb);
+        //limbDisplayFragment.setShowChart(false);
+
     }
 
     @Override

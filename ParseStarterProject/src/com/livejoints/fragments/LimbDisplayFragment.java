@@ -29,6 +29,15 @@ public class LimbDisplayFragment extends Fragment {
     ImageView lowerArm;
     CircleChart circleChart;
 
+    public void setShowChart(boolean showChart) {
+        this.showChart = showChart;
+        if (showChart == false) {
+            circleChart.setVisibility(View.GONE);
+        }
+    }
+
+    private boolean showChart = true;
+
     public LimbDisplayFragment() {
     }
 
@@ -50,6 +59,10 @@ public class LimbDisplayFragment extends Fragment {
         lowerArm.setScaleX(0.5f);
         lowerArm.setScaleY(0.5f);
         lowerArm.setBackgroundColor(Color.TRANSPARENT);
+
+        if (showChart == false) {
+            circleChart.setVisibility(View.GONE);
+        }
 
         return v;
     }
@@ -112,7 +125,10 @@ public class LimbDisplayFragment extends Fragment {
                         int angle = Integer.parseInt(angleStr);
 
                         setAngle(angle);
-                        circleChart.addValue(angle);
+                        if (showChart == true) {
+                            circleChart.addValue(angle);
+                        }
+
 //                        if (counter < 0) {
 //                            counter = 0;
 //                            circleChart.addValue(angle);

@@ -31,4 +31,5 @@
     <string name="menu_main">Main</string>
     <string name="title_activity_realtime_display">RealtimeDisplay</string>
     <string name="title_activity_timelapse">TimelapseActivity</string>
+    <string name="title_activity_overview">OverviewActivity</string>
 </resources>

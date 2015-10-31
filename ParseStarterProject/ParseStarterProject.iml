@@ -90,6 +90,7 @@
     <orderEntry type="library" exported="" name="gson-2.3" level="project" />
     <orderEntry type="library" exported="" name="MPAndroidChart-v2.1.5" level="project" />
     <orderEntry type="library" exported="" name="ParseCrashReporting-1.10.2" level="project" />
+    <orderEntry type="library" exported="" name="commons-math3-3.5" level="project" />
     <orderEntry type="library" exported="" name="bolts-android-1.2.0" level="project" />
   </component>
 </module>

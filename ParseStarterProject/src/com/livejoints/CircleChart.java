@@ -13,8 +13,16 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
 
+//  http://commons.apache.org/proper/commons-math/apidocs/org/apache/commons/math3/stat/regression/SimpleRegression.html
+//  http://commons.apache.org/proper/commons-math/userguide/stat.html
+import org.apache.commons.math3.stat.regression.RegressionResults;
+import org.apache.commons.math3.stat.regression.SimpleRegression;
+
 /**
  * Created by nathantofte on 10/20/15.
+ * Consider using http://commons.apache.org/proper/commons-math/userguide/ml.html for analysis
+ *
+ * http://www.lejos.org/ev3/docs/lejos/robotics/filter/LinearCalibrationFilter.html
  */
 public class CircleChart extends ImageView {
     private final static String TAG = CircleChart.class.getSimpleName();
@@ -36,6 +44,7 @@ public class CircleChart extends ImageView {
 
     Bitmap transparencyMaskBitmap;
     Canvas transparencyMaskCanvas;
+    SimpleRegression regression;
 
 
     public CircleChart(Context context) {
@@ -50,6 +59,17 @@ public class CircleChart extends ImageView {
 
 
     void init() {
+        regression = new SimpleRegression();
+
+        // calibrate!!
+        regression.addData(3, 20);
+        regression.addData(5, 26);
+        regression.addData(30, 120);
+
+        RegressionResults rr = regression.regress();
+        double p = regression.predict(23);
+
+
         setBackgroundColor(Color.TRANSPARENT);
 
         paint = new Paint();
