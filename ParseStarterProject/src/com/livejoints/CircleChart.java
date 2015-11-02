@@ -15,14 +15,19 @@ import android.widget.ImageView;
 
 //  http://commons.apache.org/proper/commons-math/apidocs/org/apache/commons/math3/stat/regression/SimpleRegression.html
 //  http://commons.apache.org/proper/commons-math/userguide/stat.html
-import org.apache.commons.math3.stat.regression.RegressionResults;
-import org.apache.commons.math3.stat.regression.SimpleRegression;
 
 /**
  * Created by nathantofte on 10/20/15.
  * Consider using http://commons.apache.org/proper/commons-math/userguide/ml.html for analysis
  *
  * http://www.lejos.org/ev3/docs/lejos/robotics/filter/LinearCalibrationFilter.html
+ *
+ * reading -> actual
+ * 86 -> 0
+ * 68 -> 45
+ * 48 -> 90
+ * 28 -> 135
+ * 8 -> 180
  */
 public class CircleChart extends ImageView {
     private final static String TAG = CircleChart.class.getSimpleName();
@@ -44,7 +49,12 @@ public class CircleChart extends ImageView {
 
     Bitmap transparencyMaskBitmap;
     Canvas transparencyMaskCanvas;
-    SimpleRegression regression;
+
+    RectF outerRect; // outside of arc for chart
+    RectF innerRect; // inside of arc for chart
+    int centerX = 0;
+    int centerY = 0;
+    Path segmentPath = null;
 
 
     public CircleChart(Context context) {
@@ -59,16 +69,6 @@ public class CircleChart extends ImageView {
 
 
     void init() {
-        regression = new SimpleRegression();
-
-        // calibrate!!
-        regression.addData(3, 20);
-        regression.addData(5, 26);
-        regression.addData(30, 120);
-
-        RegressionResults rr = regression.regress();
-        double p = regression.predict(23);
-
 
         setBackgroundColor(Color.TRANSPARENT);
 
@@ -127,11 +127,7 @@ int maxRadius=0;
         canvas.drawBitmap(chartBitmap, 0, 0, overlayPaint);
     }
 
-    RectF outerRect; // outside of arc for chart
-    RectF innerRect; // inside of arc for chart
-    int centerX = 0;
-    int centerY = 0;
-    Path segmentPath = null;
+
 
     void drawOutsideCircleGraph(Canvas canvas) {
 
@@ -168,8 +164,6 @@ int maxRadius=0;
 
 
     void drawInsideCircleGraph(Canvas canvas) {
-
-
         int radiusOutside = maxRadius;
         int radiusInsideStart = maxRadius/2;
         int radiusInside = 40;
@@ -179,7 +173,6 @@ int maxRadius=0;
 
         outerRect = new RectF(centerX - radiusOutside, centerY - radiusOutside, centerX + radiusOutside, centerY + radiusOutside);
 
-
         int prevAngle = startAngle;
 
         double start = Math.toRadians(startAngle);
@@ -187,7 +180,7 @@ int maxRadius=0;
         segmentPath.reset();
         segmentPath.moveTo((float) (centerX + radiusOutside * Math.cos(start)), (float) (centerY + radiusOutside * Math.sin(start)));
 
-        for (int i = 0; i < NUMBER_OF_CATEGORIES-20; i++) {
+        for (int i = 0; i < NUMBER_OF_CATEGORIES-15; i++) {
             //Log.d(TAG, "adjusted " + i + ": " + adjustedValuesByTens[i]);
 
             // adjustedValuesByTens should be 0.0 to 1.0
@@ -208,7 +201,8 @@ int maxRadius=0;
 
 
     public void addValue(int angle) {
-        int index = angle / 10;
+
+        int index = (int)(angle / 10);
         if (index > NUMBER_OF_CATEGORIES) index = NUMBER_OF_CATEGORIES;
 
         valuesByTens[index]++;
@@ -264,10 +258,6 @@ int maxRadius=0;
             Log.d(TAG, "adjusted " + i + ": " + adjustedValuesByTens[i]);
         }
     }
-
-
-
-
 
 
 }

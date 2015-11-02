@@ -34,6 +34,9 @@ import android.util.Log;
 
 import com.livejoints.analytics.ParseDataCollector;
 
+import org.apache.commons.math3.stat.regression.RegressionResults;
+import org.apache.commons.math3.stat.regression.SimpleRegression;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -50,6 +53,9 @@ public class BluetoothLeService extends Service {
     private String mBluetoothDeviceAddress;
     private BluetoothGatt mBluetoothGatt;
     private int mConnectionState = STATE_DISCONNECTED;
+
+
+    SimpleRegression regression = null;
 
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;
@@ -136,14 +142,28 @@ public class BluetoothLeService extends Service {
 
         if (UUID_ANGLE_MEASUREMENT.equals(characteristic.getUuid())) {
             String s = new String(characteristic.getStringValue(0));
+
+            // should fix the null / 0 issue at sensor, not here....
+            if ((s == null) || (s.length() == 0)) s = "0";
+
             if (s != null && s.length() > 0) {
-                intent.putExtra(EXTRA_DATA, s);
+
                 Log.d(TAG, "new reading: " + s);
                 counter++;
-                if ((counter % 80) == 0) {
+                if ((counter % 1) == 0) {
+                    counter = 0;
                     //dc.add(angle);
                     int angle = Integer.parseInt(s);
-                    boolean newSensorSummaryAvailable = pdc.add(angle);
+                    int calibratedAngle = (int) (regression.predict(angle));
+                    if (calibratedAngle < 0) calibratedAngle=0;
+                    Log.d(TAG, "calibrated reading: " + calibratedAngle);
+
+                    String calibratedAngleStr = ""+calibratedAngle;
+
+                    intent.putExtra(EXTRA_DATA, calibratedAngleStr);
+                    sendBroadcast(intent);
+
+                    boolean newSensorSummaryAvailable = pdc.add(calibratedAngle);
                     if (newSensorSummaryAvailable==true) {
                         Log.d(TAG, "=======> new sensor summary available");
                         // need to broadcast that there is a new sensorsummary available
@@ -162,9 +182,10 @@ public class BluetoothLeService extends Service {
                 for(byte byteChar : data)
                     stringBuilder.append(String.format("%02X ", byteChar));
                 intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
+                sendBroadcast(intent);
             }
         }
-        sendBroadcast(intent);
+
     }
 
     public class LocalBinder extends Binder {
@@ -211,11 +232,27 @@ public class BluetoothLeService extends Service {
             return false;
         }
 
+        calibrateSensor();
+
         pdc = new ParseDataCollector();
         // dont keep tons of the readings around.
         pdc.setRetainOnlyPrevious(true);
 
         return true;
+    }
+
+    private void calibrateSensor() {
+        regression = new SimpleRegression();
+
+        // calibrate!!
+        regression.addData(86, 0);
+        regression.addData(68, 45);
+        regression.addData(48, 90);
+        regression.addData(28, 135);
+        regression.addData(8, 180);
+
+
+        RegressionResults rr = regression.regress();
     }
 
     /**
