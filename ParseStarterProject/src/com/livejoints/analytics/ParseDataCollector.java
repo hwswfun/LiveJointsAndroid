@@ -31,7 +31,7 @@ public class ParseDataCollector {
             Log.d(TAG, "analyzed the latest ParseSensorSummary> :" + ss.toString());
 
 
-            ss.saveEventually();
+            ss.saveInBackground();//.saveEventually();
             Log.d(TAG, "Saved object with average of " + ss.getAverage());
         }
 
