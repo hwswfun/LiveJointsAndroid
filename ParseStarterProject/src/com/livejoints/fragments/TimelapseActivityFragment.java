@@ -78,7 +78,7 @@ public class TimelapseActivityFragment extends Fragment {
         YAxis leftAxis = mChart.getAxisLeft();
 //        leftAxis.setEnabled(false);
         leftAxis.setLabelCount(10, false);
-        leftAxis.setAxisMaxValue(100f);
+        leftAxis.setAxisMaxValue(200f);
         leftAxis.setDrawGridLines(false);
         leftAxis.setDrawAxisLine(false);
         leftAxis.setStartAtZero(true);

@@ -87,6 +87,8 @@ public class CircleChart extends ImageView {
     }
 
 int maxRadius=0;
+    int radiusOutside = 0;
+    int radiusInsideStart = 0;
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -104,6 +106,9 @@ int maxRadius=0;
             } else {
                 maxRadius = centerX;
             }
+            radiusOutside = maxRadius;
+            radiusInsideStart = maxRadius/2;
+
         }
         super.onSizeChanged(w, h, oldw, oldh);
     }
@@ -163,9 +168,11 @@ int maxRadius=0;
     }
 
 
+
+
+
     void drawInsideCircleGraph(Canvas canvas) {
-        int radiusOutside = maxRadius;
-        int radiusInsideStart = maxRadius/2;
+
         int radiusInside = 40;
         int startAngle = 270;  // because 0 degrees is to the right.  We add 270 to get "0" as top.
         int sweepAngle = 10;

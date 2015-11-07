@@ -22,8 +22,8 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/fragment_limb"
         android:name="com.livejoints.fragments.LimbDisplayFragment"
-        android:layout_width="match_parent"
-        android:layout_height="600dp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         tools:layout="@layout/fragment_realtime_display" />
 
 
