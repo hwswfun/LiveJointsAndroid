@@ -40,5 +40,11 @@ public class ParseApplication extends Application {
     ParseACL.setDefaultACL(defaultACL, true);
 
     Log.d("APP", "ParseApplication onCreated end");
+
   }
+
+
+
+
+
 }

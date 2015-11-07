@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,13 +38,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.livejoints.R;
+import com.parse.FunctionCallback;
+import com.parse.ParseCloud;
+import com.parse.ParseException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
  */
-public class DeviceScanActivity extends ListActivity {
+public class DeviceScanActivity extends ListActivity implements FunctionCallback{
     private LeDeviceListAdapter mLeDeviceListAdapter;
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
@@ -78,6 +83,8 @@ public class DeviceScanActivity extends ListActivity {
             finish();
             return;
         }
+
+        callParse();
     }
 
     @Override
@@ -181,6 +188,8 @@ public class DeviceScanActivity extends ListActivity {
         invalidateOptionsMenu();
     }
 
+
+
     // Adapter for holding devices found through scanning.
     private class LeDeviceListAdapter extends BaseAdapter {
         private ArrayList<BluetoothDevice> mLeDevices;
@@ -271,4 +280,56 @@ public class DeviceScanActivity extends ListActivity {
         TextView deviceName;
         TextView deviceAddress;
     }
+
+
+    private void callParse() {
+        ParseCloud.callFunctionInBackground("hello", new HashMap<String, Object>(), this);
+
+
+
+        HashMap<String, Object> dict = new HashMap<String, Object>();
+        dict.put( "invitorPersonId", "me" );
+        dict.put("theMode", "you");
+
+        ParseCloud.callFunctionInBackground(
+                "hello",
+                dict,
+                new FunctionCallback<Object>()
+                {
+                    @Override
+                    public void done(Object s, ParseException e)
+                    {
+                        if (e == null) {
+                            Log.d("ParseCloud3", s.toString());
+                        } else {
+                            Log.d("ParseCloud3", e.toString());
+                        }
+                    }
+                });
+
+
+
+    }
+
+
+    @Override
+    public void done(Object o, ParseException e) {
+        if (e == null) {
+            Log.d("ParseCloud2", o.toString());
+        } else {
+            Log.d("ParseCloud2", e.toString());
+        }
+    }
+
+    @Override
+    public void done(Object o, Throwable e) {
+        if (e == null) {
+            Log.d("ParseCloud1", o.toString());
+        } else {
+            Log.d("ParseCloud1", e.toString());
+        }
+    }
+
+
+
 }
