@@ -38,17 +38,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.livejoints.R;
-import com.parse.FunctionCallback;
-import com.parse.ParseCloud;
 import com.parse.ParseException;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
  */
-public class DeviceScanActivity extends ListActivity implements FunctionCallback{
+public class DeviceScanActivity extends ListActivity {
     private LeDeviceListAdapter mLeDeviceListAdapter;
     private BluetoothAdapter mBluetoothAdapter;
     private boolean mScanning;
@@ -84,7 +82,6 @@ public class DeviceScanActivity extends ListActivity implements FunctionCallback
             return;
         }
 
-        callParse();
     }
 
     @Override
@@ -153,10 +150,75 @@ public class DeviceScanActivity extends ListActivity implements FunctionCallback
         mLeDeviceListAdapter.clear();
     }
 
+    private void logIn(String user) {
+
+        String email = user + "@example.com";
+        String pw = user + "@example.com";
+        boolean loggedIn = false;
+
+
+        // is this the current logged in user?
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
+            if (currentUser.getUsername().equalsIgnoreCase(user)) {
+                loggedIn = true;
+            } else {
+                ParseUser.logOut();
+            }
+        }
+
+
+        // try to log in
+        if (loggedIn == false) {
+            try {
+                ParseUser.logIn(user,pw);
+                loggedIn = true;
+            } catch (ParseException e) {
+                //e.printStackTrace();
+            }
+        }
+
+        // not able to log in.  assume need new ID
+        if (loggedIn == false) {
+            ParseUser newUser = new ParseUser();
+            newUser.setUsername(user);
+            newUser.setPassword(pw);
+            newUser.setEmail(email);
+
+            try {
+                newUser.signUp();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        // is this the current logged in user?
+        currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
+            if (currentUser.getUsername().equalsIgnoreCase(user)) {
+                loggedIn = true;
+            } else {
+                try {
+                    ParseUser.logIn(user,pw);
+                    loggedIn = true;
+                } catch (ParseException e) {
+                    Log.e("PARSE","Still could not log in as: "+user);
+                    //e.printStackTrace();
+                }
+            }
+        }
+
+    }
+
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         final BluetoothDevice device = mLeDeviceListAdapter.getDevice(position);
         if (device == null) return;
+
+        // Log into parse as user=this device name.  Lame but good for now.
+        logIn(device.getName());
+
         final Intent intent = new Intent(this, OverViewActivity.class);
         intent.putExtra(OverViewActivity.EXTRAS_DEVICE_NAME, device.getName());
         intent.putExtra(OverViewActivity.EXTRAS_DEVICE_ADDRESS, device.getAddress());
@@ -279,55 +341,6 @@ public class DeviceScanActivity extends ListActivity implements FunctionCallback
     static class ViewHolder {
         TextView deviceName;
         TextView deviceAddress;
-    }
-
-
-    private void callParse() {
-        ParseCloud.callFunctionInBackground("hello", new HashMap<String, Object>(), this);
-
-
-
-        HashMap<String, Object> dict = new HashMap<String, Object>();
-        dict.put( "invitorPersonId", "me" );
-        dict.put("theMode", "you");
-
-        ParseCloud.callFunctionInBackground(
-                "hello",
-                dict,
-                new FunctionCallback<Object>()
-                {
-                    @Override
-                    public void done(Object s, ParseException e)
-                    {
-                        if (e == null) {
-                            Log.d("ParseCloud3", s.toString());
-                        } else {
-                            Log.d("ParseCloud3", e.toString());
-                        }
-                    }
-                });
-
-
-
-    }
-
-
-    @Override
-    public void done(Object o, ParseException e) {
-        if (e == null) {
-            Log.d("ParseCloud2", o.toString());
-        } else {
-            Log.d("ParseCloud2", e.toString());
-        }
-    }
-
-    @Override
-    public void done(Object o, Throwable e) {
-        if (e == null) {
-            Log.d("ParseCloud1", o.toString());
-        } else {
-            Log.d("ParseCloud1", e.toString());
-        }
     }
 
 

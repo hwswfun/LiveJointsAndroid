@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.parse.ParseClassName;
 import com.parse.ParseObject;
+import com.parse.ParseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,6 +24,8 @@ public class ParseSensorSummary extends ParseObject {
     JSONArray detailSensorArray = new JSONArray();
 
 
+
+    private static final String SENSORSUMMARY_USER = "User";
     private static final String SENSORSUMMARY_AVERAGE = "Average";
     private static final String SENSORSUMMARY_LOW = "Low";
     private static final String SENSORSUMMARY_HIGH = "High";
@@ -49,7 +52,18 @@ public class ParseSensorSummary extends ParseObject {
              detailSensorArray = new JSONArray();
          }
         setReadingDate(Calendar.getInstance().getTime());
+        setUser(ParseUser.getCurrentUser());
     }
+
+    public ParseUser getUser() {
+        return getParseUser(SENSORSUMMARY_USER);
+    }
+
+    public void setUser(ParseUser user) {
+        this.put(SENSORSUMMARY_USER, user);
+    }
+
+
 
 
     public Date getReadingDate() {

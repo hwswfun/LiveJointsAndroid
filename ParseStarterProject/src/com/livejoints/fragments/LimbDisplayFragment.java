@@ -21,10 +21,12 @@ import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -128,11 +130,30 @@ public class LimbDisplayFragment extends Fragment {
         Parse.setLogLevel(Parse.LOG_LEVEL_VERBOSE);
         Log.d(TAG, "query for:" + ParseSensorSummary.class.getSimpleName());
 
+        ParseUser user = ParseUser.getCurrentUser();
+
+
+        Date midnight = new Date();
+        midnight.setHours(0);
+        midnight.setMinutes(0);
+        midnight.setSeconds(0);
+
+        Date elevenfiftynine = new Date();
+        elevenfiftynine.setHours(23);
+        elevenfiftynine.setMinutes(59);
+        elevenfiftynine.setSeconds(59);
+
+
+
+
         ParseQuery<ParseSensorSummary> query = ParseQuery.getQuery(ParseSensorSummary.class);
         //query.whereEqualTo("playerName", "Dan Stemkoski");
-
+        query.whereEqualTo("User", user);
         query.orderByDescending("createdAt");
-        query.setLimit(10);
+        // today
+        query.whereGreaterThan("Date", midnight);
+        query.whereLessThan("Date", elevenfiftynine);
+        //query.setLimit(10);
 
 
         query.findInBackground(new FindCallback<ParseSensorSummary>() {
