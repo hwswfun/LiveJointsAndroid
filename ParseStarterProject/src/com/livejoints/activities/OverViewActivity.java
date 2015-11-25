@@ -30,8 +30,6 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ExpandableListView;
 
 import com.livejoints.R;
 import com.livejoints.bluetooth.BluetoothLeService;
@@ -133,23 +131,10 @@ public class OverViewActivity extends Activity
     };
 
 
-    private void listenForSensor() {
-        if (mGattCharacteristics != null) {
-            final BluetoothGattCharacteristic characteristic = mGattCharacteristics.get(2).get(0);
-            final int charaProp = characteristic.getProperties();
-            if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
-
-                //mBluetoothLeService.readCharacteristic(characteristic);
-            }
-            if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
-                mBluetoothLeService.setCharacteristicNotification(
-                        characteristic, true);
-            }
-        }
-    }
 
 
-    // If a given GATT characteristic is selected, check for supported features.  This sample
+
+/*    // If a given GATT characteristic is selected, check for supported features.  This sample
     // demonstrates 'Read' and 'Notify' features.  See
     // http://d.android.com/reference/android/bluetooth/BluetoothGatt.html for the complete
     // list of supported characteristic features.
@@ -181,7 +166,7 @@ public class OverViewActivity extends Activity
                     }
                     return false;
                 }
-            };
+            };*/
 
 
     @Override
@@ -321,6 +306,21 @@ public class OverViewActivity extends Activity
             }
             mGattCharacteristics.add(charas);
             gattCharacteristicData.add(gattCharacteristicGroupData);
+        }
+    }
+
+    private void listenForSensor() {
+        if (mGattCharacteristics != null) {
+            final BluetoothGattCharacteristic characteristic = mGattCharacteristics.get(2).get(0);
+            final int charaProp = characteristic.getProperties();
+            if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
+
+                //mBluetoothLeService.readCharacteristic(characteristic);
+            }
+            if ((charaProp | BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
+                mBluetoothLeService.setCharacteristicNotification(
+                        characteristic, true);
+            }
         }
     }
 
