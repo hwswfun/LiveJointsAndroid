@@ -216,11 +216,11 @@ public class OverViewActivity extends Activity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.gatt_services, menu);
+        getMenuInflater().inflate(R.menu.overview, menu);
 
         // lets not display options for disconnecting. assume autoconnect.
-        menu.findItem(R.id.menu_connect).setVisible(false);
-        menu.findItem(R.id.menu_disconnect).setVisible(false);
+//        menu.findItem(R.id.menu_connect).setVisible(false);
+//        menu.findItem(R.id.menu_disconnect).setVisible(false);
 
 /*
         if (mConnected) {

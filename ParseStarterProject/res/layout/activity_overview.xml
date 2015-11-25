@@ -12,18 +12,20 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_height="match_parent"
+    android:layout_margin="0dp"
+    android:background="@color/White"
     android:orientation="vertical">
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/fragment_limb"
         android:name="com.livejoints.fragments.LimbDisplayFragment"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+        android:layout_width="500dp"
+        android:layout_height="500dp"
+        android:layout_gravity="center_horizontal"
         tools:layout="@layout/fragment_realtime_display" />
 
 
@@ -33,5 +35,6 @@
         android:name="com.livejoints.fragments.TimelapseActivityFragment"
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:layout_alignParentBottom="true"
         tools:layout="@layout/fragment_timelapse" />
-</LinearLayout>
+</RelativeLayout>

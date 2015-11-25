@@ -110,9 +110,9 @@ public class TimelapseActivityFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.action_refresh:
+           /* case R.id.action_refresh:
                 getData();
-                break;
+                break;*/
         }
         return true;
     }
