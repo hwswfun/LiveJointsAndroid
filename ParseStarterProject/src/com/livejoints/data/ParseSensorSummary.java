@@ -20,7 +20,7 @@ public class ParseSensorSummary extends ParseObject {
 
     public static final String TAG = ParseSensorSummary.class.getSimpleName().toString();
 
-    JSONArray detailSensorArray = new JSONArray();;
+    JSONArray detailSensorArray = new JSONArray();
 
 
     private static final String SENSORSUMMARY_AVERAGE = "Average";

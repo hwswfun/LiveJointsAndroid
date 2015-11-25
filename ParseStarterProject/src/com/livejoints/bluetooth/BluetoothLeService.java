@@ -148,7 +148,7 @@ public class BluetoothLeService extends Service {
 
             if (s != null && s.length() > 0) {
 
-                Log.d(TAG, "new reading: " + s);
+                //Log.d(TAG, "new reading: " + s);
                 counter++;
                 if ((counter % 1) == 0) {
                     counter = 0;
@@ -156,7 +156,7 @@ public class BluetoothLeService extends Service {
                     int angle = Integer.parseInt(s);
                     int calibratedAngle = (int) (regression.predict(angle));
                     if (calibratedAngle < 0) calibratedAngle=0;
-                    Log.d(TAG, "calibrated reading: " + calibratedAngle);
+                    //Log.d(TAG, "calibrated reading: " + calibratedAngle);
 
                     String calibratedAngleStr = ""+calibratedAngle;
 

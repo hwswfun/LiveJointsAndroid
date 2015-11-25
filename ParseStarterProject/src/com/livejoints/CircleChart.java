@@ -56,6 +56,10 @@ public class CircleChart extends ImageView {
     int centerY = 0;
     Path segmentPath = null;
 
+    int maxRadius=0;
+    int radiusOutside = 0;
+    int radiusInsideStart = 0;
+
 
     public CircleChart(Context context) {
         super(context);
@@ -86,9 +90,14 @@ public class CircleChart extends ImageView {
         segmentPath = new Path();
     }
 
-int maxRadius=0;
-    int radiusOutside = 0;
-    int radiusInsideStart = 0;
+
+    public void resetData() {
+        valuesByTens = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        adjustedValuesByTens = new double[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        valuesTotal = 0;
+        invalidate();
+    }
+
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -114,7 +123,6 @@ int maxRadius=0;
     }
 
 
-
     @Override
     protected void onDraw(Canvas canvas) {
         // draws the src image for this into the chartCanvas
@@ -133,7 +141,7 @@ int maxRadius=0;
     }
 
 
-
+/*    // assumes all values are in adjustedValuesByTens array
     void drawOutsideCircleGraph(Canvas canvas) {
 
         int radiusOutside;
@@ -165,12 +173,10 @@ int maxRadius=0;
         segmentPath.arcTo(innerRect, prevAngle, -prevAngle);
 
         canvas.drawPath(segmentPath, paint);
-    }
+    }*/
 
 
-
-
-
+    // assumes all values are in adjustedValuesByTens array
     void drawInsideCircleGraph(Canvas canvas) {
 
         int radiusInside = 40;
@@ -218,7 +224,6 @@ int maxRadius=0;
         adjustedValues();
         //printAdjustedValues();
         invalidate();
-
     }
 
 

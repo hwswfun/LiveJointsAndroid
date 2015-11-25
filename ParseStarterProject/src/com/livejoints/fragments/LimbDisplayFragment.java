@@ -16,6 +16,16 @@ import android.widget.ImageView;
 import com.livejoints.CircleChart;
 import com.livejoints.R;
 import com.livejoints.bluetooth.BluetoothLeService;
+import com.livejoints.data.ParseSensorSummary;
+import com.parse.FindCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -28,13 +38,6 @@ public class LimbDisplayFragment extends Fragment {
     ImageView upperArm;
     ImageView lowerArm;
     CircleChart circleChart;
-
-    public void setShowChart(boolean showChart) {
-        this.showChart = showChart;
-        if (showChart == false) {
-            circleChart.setVisibility(View.GONE);
-        }
-    }
 
     private boolean showChart = true;
 
@@ -68,13 +71,16 @@ public class LimbDisplayFragment extends Fragment {
     }
 
 
-    private void setAngle(int angle) {
-        lowerArm.setRotation(angle);
-    }
-
     @Override
     public void onResume() {
         super.onResume();
+
+        // do not show chart
+        // request update to chart from parse
+        circleChart.setVisibility(View.GONE);
+        resetData();
+
+
         getActivity().registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
     }
 
@@ -83,12 +89,118 @@ public class LimbDisplayFragment extends Fragment {
     public void onPause() {
         super.onPause();
         getActivity().unregisterReceiver(mGattUpdateReceiver);
+
+
+    }
+
+    private void dataAvailable(Context context, Intent intent) {
+        String angleStr = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
+        if (angleStr != null) {
+            try {
+                //Log.d(TAG, "data received =========>" + angleStr);
+                int angle = Integer.parseInt(angleStr);
+
+                // set angle of forearm image in chart
+                setAngle(angle);
+                if (showChart == true) {
+                    // add value to chart
+                    circleChart.addValue(angle);
+                }
+
+            } catch (NumberFormatException nfe) {
+                Log.d(TAG, "bummer.  value for angle was wierd: " + angleStr);
+            }
+        } else {
+            Log.d(TAG, "null ptr");
+        }
+    }
+
+
+    boolean beingReset = false;
+
+    public void resetData() {
+        beingReset = true;
+        getResetData();
+
+        // beingReset gets set to false once data returned and processed
+    }
+    private void getResetData() {
+        Parse.setLogLevel(Parse.LOG_LEVEL_VERBOSE);
+        Log.d(TAG, "query for:" + ParseSensorSummary.class.getSimpleName());
+
+        ParseQuery<ParseSensorSummary> query = ParseQuery.getQuery(ParseSensorSummary.class);
+        //query.whereEqualTo("playerName", "Dan Stemkoski");
+
+        query.orderByDescending("createdAt");
+        query.setLimit(10);
+
+
+        query.findInBackground(new FindCallback<ParseSensorSummary>() {
+            public void done(List<ParseSensorSummary> sensorSummaryList, ParseException e) {
+                if (e == null) {
+                    Log.d("score", "Retrieved " + sensorSummaryList.size() + " scores");
+                    resetDataReceived(sensorSummaryList);
+                } else {
+                    Log.d("score", "Error: " + e.getMessage());
+                }
+            }
+        });
+    }
+
+
+    private void resetDataReceived(List<ParseSensorSummary> readings) {
+
+        circleChart.resetData();
+
+        ParseSensorSummary pss=null;
+        for (int i = 0; i < readings.size(); i++) {
+            pss = readings.get(i);
+
+            JSONArray detailSensorArray = pss.getReadings();
+
+            int numReadings = detailSensorArray.length();
+
+            try {
+                for (int j = 0; j < numReadings; j++) {
+                    int val = detailSensorArray.getInt(j);
+                    circleChart.addValue(val);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        // allow individual readings again
+        beingReset = false;
+
+        // show chart again now that repopulated
+        if (showChart == true) {
+            circleChart.setVisibility(View.VISIBLE);
+        }
     }
 
 
 
 
-    static long counter = 0;
+    private void setAngle(int angle) {
+        lowerArm.setRotation(angle);
+    }
+
+    public void setShowChart(boolean showChart) {
+        this.showChart = showChart;
+        if (showChart == false) {
+            circleChart.setVisibility(View.GONE);
+        }
+    }
+
+
+
+
+
+
+
 
     // Handles various events fired by the Service.
     // ACTION_GATT_CONNECTED: connected to a GATT server.
@@ -118,43 +230,12 @@ public class LimbDisplayFragment extends Fragment {
             */
 
             if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-                String angleStr = intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
-                if (angleStr != null) {
-                    try {
-                        //Log.d(TAG, "data received =========>" + angleStr);
-                        int angle = Integer.parseInt(angleStr);
-
-                        setAngle(angle);
-                        if (showChart == true) {
-                            circleChart.addValue(angle);
-                        }
-
-//                        if (counter < 0) {
-//                            counter = 0;
-//                            circleChart.addValue(angle);
-//                        } else {
-//                            counter--;
-//
-//                        }
-
-//                        int index = angle / 10;
-//                        if (index > NUMBER_OF_CATEGORIES) index = NUMBER_OF_CATEGORIES;
-//
-//                        valuesByTens[index]++;
-//                        valuesTotal++;
-//                        alignValues();
-//                        adjustedValues();
-                        //printAdjustedValues();
-
-                    } catch (NumberFormatException nfe) {
-                        Log.d(TAG, "bummer.  value for angle was wierd: " + angleStr);
-                    }
-                } else {
-                    Log.d(TAG, "null ptr");
+                if (beingReset == false) {
+                    // only update real time if not in the middle of a chart reset (pulling from server)
+                    dataAvailable(context,intent);
                 }
-
-
             }
+
         }
     };
 
