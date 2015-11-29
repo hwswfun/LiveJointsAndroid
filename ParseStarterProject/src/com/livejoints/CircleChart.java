@@ -215,6 +215,9 @@ public class CircleChart extends ImageView {
 
     public void addValue(int angle) {
 
+        angle = 180 - angle;
+        if (angle < 0) angle = 0;
+
         int index = (int)(angle / 10);
         if (index > NUMBER_OF_CATEGORIES) index = NUMBER_OF_CATEGORIES;
 

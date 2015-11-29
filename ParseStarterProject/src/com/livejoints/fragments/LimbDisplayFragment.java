@@ -206,6 +206,8 @@ public class LimbDisplayFragment extends Fragment {
 
 
     private void setAngle(int angle) {
+        angle = 180 - angle;
+        if (angle < 0) angle = 0;
         lowerArm.setRotation(angle);
     }
 

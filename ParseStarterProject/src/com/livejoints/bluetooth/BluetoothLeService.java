@@ -148,7 +148,7 @@ public class BluetoothLeService extends Service {
 
             if (s != null && s.length() > 0) {
 
-                //Log.d(TAG, "new reading: " + s);
+                Log.d(TAG, "new reading: " + s);
                 counter++;
                 if ((counter % 1) == 0) {
                     counter = 0;
@@ -156,7 +156,7 @@ public class BluetoothLeService extends Service {
                     int angle = Integer.parseInt(s);
                     int calibratedAngle = (int) (regression.predict(angle));
                     if (calibratedAngle < 0) calibratedAngle=0;
-                    //Log.d(TAG, "calibrated reading: " + calibratedAngle);
+                    Log.d(TAG, "calibrated reading: " + calibratedAngle);
 
                     String calibratedAngleStr = ""+calibratedAngle;
 
@@ -244,12 +244,20 @@ public class BluetoothLeService extends Service {
     private void calibrateSensor() {
         regression = new SimpleRegression();
 
-        // calibrate!!
-        regression.addData(86, 0);
-        regression.addData(68, 45);
-        regression.addData(48, 90);
-        regression.addData(28, 135);
-        regression.addData(8, 180);
+        // calibrate for standalone white version
+//        regression.addData(86, 0);
+//        regression.addData(68, 45);
+//        regression.addData(48, 90);
+//        regression.addData(28, 135);
+//        regression.addData(8, 180);
+
+        // calibrate red all in one version
+        regression.addData(94, 0);
+        regression.addData(75, 45);
+        regression.addData(56, 90);
+        regression.addData(36, 135);
+        regression.addData(17, 180);
+
 
 
         RegressionResults rr = regression.regress();
