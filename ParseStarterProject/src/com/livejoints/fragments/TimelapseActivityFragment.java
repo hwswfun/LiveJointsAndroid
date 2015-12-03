@@ -19,13 +19,16 @@ import com.github.mikephil.charting.data.CandleData;
 import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.livejoints.R;
+import com.livejoints.analytics.DaySummary;
 import com.livejoints.data.ParseSensorSummary;
 import com.parse.FindCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -125,12 +128,30 @@ public class TimelapseActivityFragment extends Fragment {
     private void getData() {
         Parse.setLogLevel(Parse.LOG_LEVEL_VERBOSE);
         Log.d(TAG, "query for:" + ParseSensorSummary.class.getSimpleName());
+        ParseUser user = ParseUser.getCurrentUser();
 
         ParseQuery<ParseSensorSummary> query = ParseQuery.getQuery(ParseSensorSummary.class);
         //query.whereEqualTo("playerName", "Dan Stemkoski");
+        query.whereEqualTo("User", user);
+        query.orderByAscending("createdAt");
+        query.setLimit(1000);
 
-        query.orderByDescending("createdAt");
-        query.setLimit(10);
+
+
+        Date midnight = new Date();
+        midnight.setHours(0);
+        midnight.setMinutes(0);
+        midnight.setSeconds(0);
+
+        Date elevenfiftynine = new Date();
+        elevenfiftynine.setHours(23);
+        elevenfiftynine.setMinutes(59);
+        elevenfiftynine.setSeconds(59);
+
+
+        query.whereGreaterThan("Date", midnight);
+        query.whereLessThan("Date", elevenfiftynine);
+
 
 
         query.findInBackground(new FindCallback<ParseSensorSummary>() {
@@ -152,38 +173,85 @@ public class TimelapseActivityFragment extends Fragment {
 
         ArrayList<CandleEntry> yVals1 = new ArrayList<CandleEntry>();
 
+        DaySummary daySummary = new DaySummary();
+
+
+
         ParseSensorSummary pss=null;
-        for (int i = 0; i < readings.size(); i++) {
-            pss = readings.get(i);
-            pss.analyze();
 
-
-            float avg = (float) pss.getAverage();
-            float stddev = (float) pss.getStddev();
-
-
-            float highStddev = (float) (avg + stddev);
-            float lowStddev = (float) (avg - stddev);
-
-            float high = (float) pss.getHigh();
-            float low = (float) pss.getLow();
-
-            // clamp just in case sdtdev goes a bit nuts
-            if (lowStddev < low) lowStddev=low;
-            if (highStddev > high) highStddev = high;
-
-            Log.d(TAG,"createdAt:"+pss.getCreatedAt().toString()+"  low:"+low+", high:"+high+", avg:"+avg+", stddev:"+stddev+", lowStddev:"+lowStddev+", highStddev:"+highStddev);
-
-
-            yVals1.add(new CandleEntry(i, high, low, highStddev, lowStddev));
+        while (readings.size() > 0) {
+            daySummary.add(readings.get(0));
+            readings.remove(0);
         }
+
+
+        //ParseSensorSummary pss=null;
+//        for (int i = 0; i < readings.size(); i++) {
+//            daySummary.add(readings.get(i));
+//        }
+
+        List<ParseSensorSummary> readingsByHour = daySummary.getReadings();
+
+
+
+
+            for (int i = 0; i < readingsByHour.size(); i++) {
+                pss = readingsByHour.get(i);
+                pss.analyze();
+
+                float avg = (float) pss.getAverage();
+                float stddev = (float) pss.getStddev();
+
+
+                float highStddev = (float) (avg + stddev);
+                float lowStddev = (float) (avg - stddev);
+
+                float high = (float) pss.getHigh();
+                float low = (float) pss.getLow();
+
+                // clamp just in case sdtdev goes a bit nuts
+                if (lowStddev < low) lowStddev=low;
+                if (highStddev > high) highStddev = high;
+
+                Log.d(TAG,"createdAt:"+pss.getCreatedAt().toString()+"  low:"+low+", high:"+high+", avg:"+avg+", stddev:"+stddev+", lowStddev:"+lowStddev+", highStddev:"+highStddev);
+
+
+                yVals1.add(new CandleEntry(i, high, low, highStddev, lowStddev));
+            }
+
 
         // The numbers under the chart on X axis
         ArrayList<String> xVals = new ArrayList<String>();
-        for (int i = 0; i < readings.size(); i++) {
-            if (i==0) xVals.add(""+0);
-            else xVals.add("-"+i);
+        for (int i = 0; i < readingsByHour.size(); i++) {
+            xVals.add("" + readingsByHour.get(i).getReadingDate().getHours());
+//            if (i==0) xVals.add(""+0);
+//            else xVals.add("-"+i);
         }
+
+     /*   xVals.add("8am");
+        xVals.add("");
+        xVals.add("9am");
+        xVals.add("");
+        xVals.add("10am");
+        xVals.add("");
+        xVals.add("11am");
+        xVals.add("");
+        xVals.add("12pm");
+        xVals.add("");
+        xVals.add("1pm");
+        xVals.add("");
+        xVals.add("2pm");
+        xVals.add("");
+        xVals.add("3pm");
+        xVals.add("");
+        xVals.add("4pm");
+        xVals.add("");
+        xVals.add("5pm");
+        xVals.add("");
+
+*/
+
+
 
         CandleDataSet set1 = new CandleDataSet(yVals1, "Data Set");
         set1.setAxisDependency(YAxis.AxisDependency.LEFT);

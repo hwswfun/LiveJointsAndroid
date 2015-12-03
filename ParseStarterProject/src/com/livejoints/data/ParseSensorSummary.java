@@ -24,7 +24,6 @@ public class ParseSensorSummary extends ParseObject {
     JSONArray detailSensorArray = new JSONArray();
 
 
-
     private static final String SENSORSUMMARY_USER = "User";
     private static final String SENSORSUMMARY_AVERAGE = "Average";
     private static final String SENSORSUMMARY_LOW = "Low";
@@ -39,18 +38,17 @@ public class ParseSensorSummary extends ParseObject {
         Log.d(TAG, "Parse class of ParseSensorSummary is " + this.getClassName());
 
 
-
         //this.setACL(defaultACL);
-       // if (detailSensorArray == null) {
-       //     detailSensorArray = new JSONArray();
-       // }
+        // if (detailSensorArray == null) {
+        //     detailSensorArray = new JSONArray();
+        // }
         //setReadingDate(Calendar.getInstance().getTime());
     }
 
     public void init() {
-         if (detailSensorArray == null) {
-             detailSensorArray = new JSONArray();
-         }
+        if (detailSensorArray == null) {
+            detailSensorArray = new JSONArray();
+        }
         setReadingDate(Calendar.getInstance().getTime());
         setUser(ParseUser.getCurrentUser());
     }
@@ -64,8 +62,6 @@ public class ParseSensorSummary extends ParseObject {
     }
 
 
-
-
     public Date getReadingDate() {
         return this.getDate(SENSORSUMMARY_DATE);
     }
@@ -73,7 +69,7 @@ public class ParseSensorSummary extends ParseObject {
     public Calendar getCalendar() {
         Calendar cal = Calendar.getInstance();
         Date d = this.getDate(SENSORSUMMARY_DATE);
-        if (d!=null) {
+        if (d != null) {
             cal.setTime(d);
         }
         return cal;
@@ -91,7 +87,8 @@ public class ParseSensorSummary extends ParseObject {
         int average = 0;
 
         try {
-            if (detailSensorArray.length() < 1) detailSensorArray=this.getJSONArray(SENSORSUMMARY_READINGS);
+            if (detailSensorArray.length() < 1)
+                detailSensorArray = this.getJSONArray(SENSORSUMMARY_READINGS);
 
             int count = detailSensorArray.length();
             if (count > 0) {
@@ -148,6 +145,21 @@ public class ParseSensorSummary extends ParseObject {
 
     public void addReading(int rawPosition) {
         detailSensorArray.put(rawPosition);
+    }
+
+    public void addReadings(JSONArray sensorArrayToAdd) {
+        try {
+            int val=0;
+            for (int i = 0; i < sensorArrayToAdd.length(); i++) {
+
+                 val = sensorArrayToAdd.getInt(i);
+
+                addReading(val);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
 

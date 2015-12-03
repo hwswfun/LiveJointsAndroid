@@ -124,7 +124,7 @@ public class OverViewActivity extends Activity
 
                 Log.d(TAG, "===> new sensorSummary is available");
                 if (timelapseFragment != null) {
-                    timelapseFragment.refreshData();
+                    //timelapseFragment.refreshData();
                 }
 
                 //add to stuff
