@@ -181,6 +181,7 @@ public class CircleChart extends ImageView {
 
         int radiusInside = 40;
         int startAngle = 270;  // because 0 degrees is to the right.  We add 270 to get "0" as top.
+        startAngle+= 20;
         int sweepAngle = 10;
         double radiusRange = radiusOutside - radiusInsideStart;
 
@@ -188,12 +189,15 @@ public class CircleChart extends ImageView {
 
         int prevAngle = startAngle;
 
+
+
         double start = Math.toRadians(startAngle);
 
         segmentPath.reset();
         segmentPath.moveTo((float) (centerX + radiusOutside * Math.cos(start)), (float) (centerY + radiusOutside * Math.sin(start)));
 
-        for (int i = 0; i < NUMBER_OF_CATEGORIES-15; i++) {
+        //for (int i = 0; i < NUMBER_OF_CATEGORIES-15; i++) {
+        for (int i = 2; i < 19; i++) {
             //Log.d(TAG, "adjusted " + i + ": " + adjustedValuesByTens[i]);
 
             // adjustedValuesByTens should be 0.0 to 1.0
