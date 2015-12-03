@@ -111,9 +111,9 @@ public class CircleChart extends ImageView {
             centerY = h / 2;
 
             if (centerX < centerY) {
-                maxRadius = centerY;
-            } else {
                 maxRadius = centerX;
+            } else {
+                maxRadius = centerY;
             }
             radiusOutside = maxRadius;
             radiusInsideStart = maxRadius/2;

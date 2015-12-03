@@ -55,6 +55,7 @@ public class LimbDisplayFragment extends Fragment {
         lowerArm = (ImageView)v.findViewById(R.id.lowerArmImageView);
         circleChart = (CircleChart)v.findViewById(R.id.circleChart);
 
+
         upperArm.setRotation(0);
         upperArm.setScaleX(0.5f);
         upperArm.setScaleY(0.5f);

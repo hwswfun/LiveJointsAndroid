@@ -123,7 +123,10 @@ public class OverViewActivity extends Activity
                 //Go get new sensor summary.
 
                 Log.d(TAG, "===> new sensorSummary is available");
-                timelapseFragment.refreshData();
+                if (timelapseFragment != null) {
+                    timelapseFragment.refreshData();
+                }
+
                 //add to stuff
 
             }
@@ -184,7 +187,9 @@ public class OverViewActivity extends Activity
         bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
 
         timelapseFragment = (TimelapseActivityFragment)getFragmentManager().findFragmentById(R.id.fragment_timelapse);
-        timelapseFragment.refreshData();
+        if (timelapseFragment != null) {
+            timelapseFragment.refreshData();
+        }
 
         limbDisplayFragment = (LimbDisplayFragment)getFragmentManager().findFragmentById(R.id.fragment_limb);
         //limbDisplayFragment.setShowChart(false);
