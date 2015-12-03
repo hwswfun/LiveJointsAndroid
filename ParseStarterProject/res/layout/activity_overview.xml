@@ -24,8 +24,18 @@
         android:id="@+id/fragment_limb"
         android:name="com.livejoints.fragments.LimbDisplayFragment"
         android:layout_width="500dp"
-        android:layout_height="500dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_height="300dp"
+        android:layout_alignParentTop="true"
         tools:layout="@layout/fragment_realtime_display" />
 
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/fragment_timelapse"
+        android:name="com.livejoints.fragments.TimelapseActivityFragment"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/fragment_limb"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        tools:layout="@layout/fragment_timelapse" />
 </RelativeLayout>
