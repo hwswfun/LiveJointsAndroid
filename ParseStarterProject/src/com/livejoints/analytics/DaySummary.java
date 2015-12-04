@@ -54,7 +54,7 @@ public class DaySummary {
         }
     }
 
-    public List<ParseSensorSummary> getReadings() {
+    public static List<ParseSensorSummary> getReadings() {
         return sensorSummaryList;
     }
 

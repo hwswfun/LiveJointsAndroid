@@ -119,13 +119,18 @@ public class LimbDisplayFragment extends Fragment {
     }
 
 
-    boolean beingReset = false;
+    boolean holdNewReadings = false;
+
+    public void holdReadings(boolean hold) {
+        holdNewReadings = hold;
+    }
+
 
     public void resetData() {
-        beingReset = true;
+        //holdNewReadings = true;
         getResetData();
 
-        // beingReset gets set to false once data returned and processed
+        // holdNewReadings gets set to false once data returned and processed
     }
     private void getResetData() {
         Parse.setLogLevel(Parse.LOG_LEVEL_VERBOSE);
@@ -170,7 +175,7 @@ public class LimbDisplayFragment extends Fragment {
     }
 
 
-    private void resetDataReceived(List<ParseSensorSummary> readings) {
+    public void resetDataReceived(List<ParseSensorSummary> readings) {
 
         circleChart.resetData();
 
@@ -195,7 +200,7 @@ public class LimbDisplayFragment extends Fragment {
         }
 
         // allow individual readings again
-        beingReset = false;
+        //holdNewReadings = false;
 
         // show chart again now that repopulated
         if (showChart == true) {
@@ -254,7 +259,7 @@ public class LimbDisplayFragment extends Fragment {
             */
 
             if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-                if (beingReset == false) {
+                if (holdNewReadings == false) {
                     // only update real time if not in the middle of a chart reset (pulling from server)
                     dataAvailable(context,intent);
                 }

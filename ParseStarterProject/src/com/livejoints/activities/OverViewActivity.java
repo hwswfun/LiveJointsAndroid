@@ -31,9 +31,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.livejoints.R;
+import com.livejoints.analytics.DaySummary;
 import com.livejoints.bluetooth.BluetoothLeService;
 import com.livejoints.bluetooth.RFduinoGattAttributes;
+import com.livejoints.data.ParseSensorSummary;
 import com.livejoints.fragments.LimbDisplayFragment;
 import com.livejoints.fragments.TimelapseActivityFragment;
 
@@ -47,7 +52,7 @@ import java.util.List;
  * communicates with {@code BluetoothLeService}, which in turn interacts with the
  * Bluetooth LE API.
  */
-public class OverViewActivity extends Activity
+public class OverViewActivity extends Activity  implements OnChartValueSelectedListener
 
 {
     private final static String TAG = OverViewActivity.class.getSimpleName();
@@ -189,6 +194,7 @@ public class OverViewActivity extends Activity
         timelapseFragment = (TimelapseActivityFragment)getFragmentManager().findFragmentById(R.id.fragment_timelapse);
         if (timelapseFragment != null) {
             timelapseFragment.refreshData();
+            timelapseFragment.setChartTouchListener(this);
         }
 
         limbDisplayFragment = (LimbDisplayFragment)getFragmentManager().findFragmentById(R.id.fragment_limb);
@@ -337,5 +343,23 @@ public class OverViewActivity extends Activity
         intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
         intentFilter.addAction(BluetoothLeService.SENSOR_SUMMARY_AVAILABLE);
         return intentFilter;
+    }
+
+    @Override
+    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+
+        List<ParseSensorSummary> pssList = DaySummary.getReadings();
+        ParseSensorSummary pss = pssList.get(e.getXIndex());
+
+        List<ParseSensorSummary> singlePss = new ArrayList<ParseSensorSummary>();
+        singlePss.add(pss);
+        limbDisplayFragment.resetDataReceived(singlePss);
+        limbDisplayFragment.holdReadings(true);
+    }
+
+    @Override
+    public void onNothingSelected() {
+        limbDisplayFragment.resetData();
+        limbDisplayFragment.holdReadings(false);
     }
 }

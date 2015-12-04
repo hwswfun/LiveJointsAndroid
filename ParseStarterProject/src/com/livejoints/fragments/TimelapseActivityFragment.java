@@ -18,8 +18,6 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.CandleData;
 import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.livejoints.R;
 import com.livejoints.analytics.DaySummary;
@@ -39,7 +37,7 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class TimelapseActivityFragment extends Fragment implements OnChartValueSelectedListener {
+public class TimelapseActivityFragment extends Fragment{
 
     private final static String TAG = TimelapseActivityFragment.class.getSimpleName();
 
@@ -71,7 +69,7 @@ public class TimelapseActivityFragment extends Fragment implements OnChartValueS
         mChart.setDescription("Today");
         mChart.setVisibleYRangeMaximum(200, YAxis.AxisDependency.LEFT);
 
-        mChart.setOnChartValueSelectedListener(this);
+
 
 
         // if more than 60 entries are displayed in the chart, no values will be
@@ -110,6 +108,12 @@ public class TimelapseActivityFragment extends Fragment implements OnChartValueS
         // l.setXEntrySpace(6f);
 
         // mChart.setDrawLegend(false);
+    }
+
+
+
+    public void setChartTouchListener(OnChartValueSelectedListener l) {
+        mChart.setOnChartValueSelectedListener(l);
     }
 
     @Override
@@ -267,13 +271,4 @@ public class TimelapseActivityFragment extends Fragment implements OnChartValueS
         mChart.invalidate();
     }
 
-    @Override
-    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-
-    }
-
-    @Override
-    public void onNothingSelected() {
-
-    }
 }
