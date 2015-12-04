@@ -18,6 +18,9 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.CandleData;
 import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.livejoints.R;
 import com.livejoints.analytics.DaySummary;
 import com.livejoints.data.ParseSensorSummary;
@@ -27,6 +30,8 @@ import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,7 +39,7 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class TimelapseActivityFragment extends Fragment {
+public class TimelapseActivityFragment extends Fragment implements OnChartValueSelectedListener {
 
     private final static String TAG = TimelapseActivityFragment.class.getSimpleName();
 
@@ -58,11 +63,16 @@ public class TimelapseActivityFragment extends Fragment {
     }
 
 
+
+
     private void setupChart() {
 
 
         mChart.setDescription("Today");
         mChart.setVisibleYRangeMaximum(200, YAxis.AxisDependency.LEFT);
+
+        mChart.setOnChartValueSelectedListener(this);
+
 
         // if more than 60 entries are displayed in the chart, no values will be
         // drawn
@@ -130,6 +140,8 @@ public class TimelapseActivityFragment extends Fragment {
         Log.d(TAG, "query for:" + ParseSensorSummary.class.getSimpleName());
         ParseUser user = ParseUser.getCurrentUser();
 
+
+
         ParseQuery<ParseSensorSummary> query = ParseQuery.getQuery(ParseSensorSummary.class);
         //query.whereEqualTo("playerName", "Dan Stemkoski");
         query.whereEqualTo("User", user);
@@ -160,7 +172,7 @@ public class TimelapseActivityFragment extends Fragment {
                     Log.d("score", "Retrieved " + sensorSummaryList.size() + " scores");
                     drawChart(sensorSummaryList);
                 } else {
-                    Log.d("score", "Error: " + e.getMessage());
+                    Log.e("score", "Error: " + e.getMessage());
                 }
             }
         });
@@ -223,34 +235,14 @@ public class TimelapseActivityFragment extends Fragment {
         // The numbers under the chart on X axis
         ArrayList<String> xVals = new ArrayList<String>();
         for (int i = 0; i < readingsByHour.size(); i++) {
-            xVals.add("" + readingsByHour.get(i).getReadingDate().getHours());
-//            if (i==0) xVals.add(""+0);
-//            else xVals.add("-"+i);
+           // int hour = readingsByHour.get(i).getReadingDate().getHours();
+
+            DateFormat writeFormat = new SimpleDateFormat( "h aa");
+            String formattedDate = writeFormat.format( readingsByHour.get(i).getReadingDate() );
+
+            xVals.add(formattedDate);
+
         }
-
-     /*   xVals.add("8am");
-        xVals.add("");
-        xVals.add("9am");
-        xVals.add("");
-        xVals.add("10am");
-        xVals.add("");
-        xVals.add("11am");
-        xVals.add("");
-        xVals.add("12pm");
-        xVals.add("");
-        xVals.add("1pm");
-        xVals.add("");
-        xVals.add("2pm");
-        xVals.add("");
-        xVals.add("3pm");
-        xVals.add("");
-        xVals.add("4pm");
-        xVals.add("");
-        xVals.add("5pm");
-        xVals.add("");
-
-*/
-
 
 
         CandleDataSet set1 = new CandleDataSet(yVals1, "Data Set");
@@ -275,4 +267,13 @@ public class TimelapseActivityFragment extends Fragment {
         mChart.invalidate();
     }
 
+    @Override
+    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+
+    }
+
+    @Override
+    public void onNothingSelected() {
+
+    }
 }

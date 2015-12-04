@@ -64,7 +64,7 @@ void setup() {
   // ble advertisement packet, then the advertisementData is truncated first down to
   // a single byte, then it will truncate the deviceName)
   RFduinoBLE.advertisementData = "ledbtn";
-  RFduinoBLE.deviceName = "KatiesArm";
+  RFduinoBLE.deviceName = "DadsArm";
 
   //This variable allows you to set the BLE transmit power in dBm. You can select any value between -20 to +4 dBm
   //in 4dBm increments. (ex. -20, -16, -12, -8, -4, 0, +4)
