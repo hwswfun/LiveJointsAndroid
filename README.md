@@ -18,6 +18,8 @@ To be a valid candidate for revision surgery on the joint, the doctor required K
 
 ## Software
 
+### WARNING - The code in this repo was a "hack" to make a proof of concept to help my daughter.  The code is only for your inspiration.  Use with caution.
+
 The device contained a RFDuino which read the arm position from the sensor every 1/2 second.  The reading was sent to the Android tablet.  The tablet recorded the angle readings for each minute, calculated usage statistics for that minute, then posted the data to a cloud database on Parse.com.
 
 Joint movement visualization
