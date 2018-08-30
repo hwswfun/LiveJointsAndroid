@@ -6,8 +6,7 @@ LiveJoints is a combination hardware / software project to provide real time fee
 
 Initially, the external hardware fixture will wrap around the arm below and above the elbow.  At the elbow, on one side, there will be a  device integrated that will measure the angle for the patient / therapist to see.  A potentiometer on the other side of the elbow will  allow an arduino or raspberry pi to measure the angle and make it available to software.
 
-![](images/contracted-android.png?raw=true)
-![](images/contracted-profile.png?raw=true)
+<img src="images/contracted-profile.png" width="100px">
 
 The app software will be run with Berkeley's SNAP! program so it is easy to prototype and so my daughter's brothers can make their own fun games for her.
 
