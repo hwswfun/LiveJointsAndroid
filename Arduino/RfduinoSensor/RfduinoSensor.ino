@@ -41,16 +41,7 @@ the application.
 // (can be turned on/off from the iPhone app)
 int led = 3;
 
-// pin 5 on the RGB shield is button 1
-// (button press will be shown on the iPhone app)
-int button = 5;
 int aPin = 1;    // select the input pin for the potentiometer
-
-// debounce time (in ms)
-int debounce_time = 10;
-
-// maximum debounce timeout (in ms)
-int debounce_timeout = 100;
 
 void setup() {
   // led turned on/off from the iPhone app
@@ -73,46 +64,7 @@ void setup() {
   RFduinoBLE.begin();
 }
 
-int debounce(int state)
-{
-  int start = millis();
-  int debounce_start = start;
-  
-  while (millis() - start < debounce_timeout)
-    if (digitalRead(button) == state)
-    {
-      if (millis() - debounce_start >= debounce_time)
-        return 1;
-    }
-    else
-      debounce_start = millis();
-
-  return 0;
-}
-
-int delay_until_button(int state)
-{
-  // set button edge to wake up on
-  if (state)
-    RFduino_pinWake(button, HIGH);
-  else
-    RFduino_pinWake(button, LOW);
-    
-  do
-    // switch to lower power mode until a button edge wakes us up
-    RFduino_ULPDelay(INFINITE);
-  while (! debounce(state));
-  
-  // if multiple buttons were configured, this is how you would determine what woke you up
-  if (RFduino_pinWoke(button))
-  {
-    // execute code here
-    RFduino_resetPinWake(button);
-  }
-}
-
 void loop() {
-  //for(int i = 0;i<200;i++) {
      int a = analogRead(aPin);
      String aString = String(a);
 
@@ -121,23 +73,7 @@ void loop() {
      
      RFduinoBLE.send(sArray,aString.length()-1);
      delay(100);
-  //  delay(1000);
-  //}
-  
-  //delay (100);
-
-  //RFduinoBLE.send(25);
-
-
-
-  //delay_until_button(HIGH);
-  //RFduinoBLE.send(1);
-  
-  //delay_until_button(LOW);
-  //RFduinoBLE.send(0);
 }
-
-
 
 void RFduinoBLE_onDisconnect()
 {
